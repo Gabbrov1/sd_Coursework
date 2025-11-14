@@ -1,0 +1,12 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const response = await fetch("http://localhost:5000/api/hello");
+const data = await response.json();
+---
+
+<Layout>
+
+
+	<h1>{data.message}</h1>
+</Layout>

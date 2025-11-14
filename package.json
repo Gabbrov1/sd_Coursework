@@ -1,0 +1,10 @@
+{
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  },
+  "scripts": {
+    "dev": "concurrently \"npm:start:astro\" \"npm:start:flask\"",
+    "start:astro": "npm --prefix frontend run dev",
+    "start:flask": "python backend/app.py"
+  }
+}
