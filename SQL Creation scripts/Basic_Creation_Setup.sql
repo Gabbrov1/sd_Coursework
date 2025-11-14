@@ -1,0 +1,49 @@
+use sysDevDB
+
+CREATE TABLE Users(
+	ID INT IDENTITY(0,1) PRIMARY KEY,
+	Username NVARCHAR(32) NOT NULL,
+	PassHash NVARCHAR(32) NOT NULL,
+	ProfileImgLink NVARCHAR(MAX) NULL,
+
+);
+
+CREATE TABLE Categories(
+	ID INT IDENTITY(0,1) PRIMARY KEY,
+	name NVARCHAR(32) NOT NULL
+);
+
+CREATE TABLE Consoles(
+	ID INT IDENTITY(0,1) PRIMARY KEY,
+	name NVARCHAR(32) NOT NULL
+);
+
+CREATE TABLE Games(
+	ID INT IDENTITY(0,1) PRIMARY KEY,
+	GameName NVARCHAR(64) NOT NULL,
+	GameDescription NVARCHAR(MAX) NULL,
+);
+
+/* =============| LINK TABLES |=============*/
+
+CREATE TABLE GamesCategories(
+	GameID INT NOT NULL,
+	CategoryID INT NOT NULL,
+
+	PRIMARY KEY(GameID,CategoryID),
+
+	FOREIGN KEY (GameID) REFERENCES Games(ID),
+    FOREIGN KEY (CategoryID) REFERENCES Categories(ID)
+
+);
+
+CREATE TABLE GamesConsoles(
+	GameID INT NOT NULL,
+	ConsoleID INT NOT NULL,
+
+	PRIMARY KEY(GameID,ConsoleID),
+
+	FOREIGN KEY (GameID) REFERENCES Games(ID),
+    FOREIGN KEY (ConsoleID) REFERENCES Consoles(ID)
+
+);
