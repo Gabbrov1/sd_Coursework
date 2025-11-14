@@ -1,0 +1,58 @@
+# General
+.DS_Store
+Thumbs.db
+desktop.ini
+.vagrant/
+.env
+.env.local
+.env.*.local
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+*.tmp
+*.temp
+
+# Node
+node_modules/
+dist/
+build/
+.eslintcache
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.whl
+env/
+venv/
+.venv/
+pip-wheel-metadata/
+pip-log.txt
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+.pytest_cache/
+.ipynb_checkpoints/
+
+# VS Code
+.vscode/
+.history/
+# Operating system temporary files
+*.swp
+*~
+~$*
+.Spotlight-V100
+.Trashes
+
+# Secrets and keys
+*.pem
+*.key
+*.p12
+*.pfx
+aws_credentials
+credentials
+
