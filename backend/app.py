@@ -16,7 +16,7 @@ CORS(app,resources={r"/*": {"origins": "http://localhost:4321"}})
 
 @app.route('/api/hello', methods=['GET'])
 def hello():
-    return jsonify({"message": "Hello, Gab!"})
+    return jsonify({"message":" Hello from Flask!"})
 
 @app.route('/api/GET', methods=['GET'])
 def GET():
@@ -24,9 +24,9 @@ def GET():
 
 @app.route('/api/POST', methods=['POST'])
 def POST():
-    return (temporary_debug,200)
+    return (formatText,200)
 
-def temporary_debug():
+def formatText():
     return "This is a temporary debug route."
 
 if __name__ == '__main__':
