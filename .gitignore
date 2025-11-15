@@ -56,3 +56,5 @@ htmlcov/
 aws_credentials
 credentials
 
+backend/SQL_details.txt
+
