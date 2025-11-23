@@ -1,5 +1,7 @@
 ---
+import Layout from "../Layouts/Layout.astro";
 import GameList from "../Components/listing/itemComponent";
+import "../styles/games.scss";
 ---
 
 <html lang="en">
@@ -10,7 +12,9 @@ import GameList from "../Components/listing/itemComponent";
   </head>
   
   <body>
-    <h1>Games Page</h1>
-    <GameList />
+    <Layout>
+      <h1>Games Page</h1>
+      <GameList client:load/>
+    </Layout>
   </body>
 </html>

@@ -1,0 +1,37 @@
+.game{
+
+    margin: 1% 0 1% 1%;
+    background-color: darkslategrey;
+    padding: 2% 1% 2% 1%;
+    border-radius: 20px;
+}
+.game .top{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+}
+.game .bottom{
+    margin-top: 2%;
+
+}
+
+.game-title{
+    font-size: 2em;
+    font-weight: bold;
+    color: white;
+}
+.game-description{
+    padding: 5%;
+    font-size: 1.2em;
+    color: lightgray;
+    background-color: dimgray;
+    border-radius: 10px;
+}
+.game-categories-holder, .game-consoles-holder{
+    list-style-type: none;
+    padding: 0;
+    margin: 1% 0 0 0;
+    display: flex;
+    gap: 1%;
+}

@@ -29,13 +29,9 @@ connection_string = (
     f"PWD={os.getenv('Password')};"
 )# Establish the database connection using environment variables
 
-conn = pyodbc.connect(connection_string)
-print("Database connection established.")
-
 
 @app.route('/api/hello', methods=['GET'])
-def hello(username):
-
+def hello():
     return jsonify({"message":" Hello Chicken Nugget! "})
 
 @app.route('/api/games', methods=['GET'])
@@ -45,7 +41,7 @@ def games():
 
 def getGamesByPage(page):
     sql = f"""
-    SELECT TOP 10
+    Select
     g.ID,
     g.GameName,
     g.GameDescription,
@@ -63,10 +59,12 @@ def getGamesByPage(page):
     ) AS Consoles
     FROM Games g
     ORDER BY g.ID
-    OFFSET {page*10} ROWS
+    OFFSET 0 ROWS
     FETCH NEXT 10 ROWS ONLY;
     """
-    conn.open()
+    conn = pyodbc.connect(connection_string)
+    print("Database connection established.")
+
     cursor = conn.cursor()
     cursor.execute(sql)
 
@@ -75,7 +73,7 @@ def getGamesByPage(page):
     for row in cursor.fetchall():
         game = {
             "ID": row.ID,
-            "Title": row.Name,
+            "Title": row.GameName,
             "Description": row.GameDescription,
             "Categories": row.Categories,
             "Consoles": row.Consoles

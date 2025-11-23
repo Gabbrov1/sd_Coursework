@@ -9,7 +9,7 @@
 	</head>
 
 	<navigation>
-		<a href="/">Home</a> | <a href="/games">Games</a> 
+		<a href="/">Home</a> <a href="/games">Games</a> 
 	</navigation>
 
 	<body>
@@ -17,11 +17,37 @@
 	</body>
 </html>
 
-<style>
+<style lang="scss">
+	@use "sass:color";
+
+	$primary-color: #5c3859;
+	$primary-color1: color.scale($primary-color, $lightness: 10%);
+	$secondary-color: #ff5722;
+	$font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
 	html,
 	body {
 		margin: 0;
 		width: 100%;
 		height: 100%;
+	}
+	navigation {
+		display: flex;
+		flex-direction: row;
+		justify-content: left;
+		width:100%;
+		background-color: $primary-color;
+		padding: 1rem;
+
+		text-decoration: none;
+	}
+	navigation a {
+		color: $secondary-color;
+		text-decoration: none;
+		margin-right: 1rem;
+	}
+	navigation a:hover {
+		text-decoration: underline;
+		background-color: $primary-color1;
 	}
 </style>
