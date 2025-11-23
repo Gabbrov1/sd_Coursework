@@ -9,7 +9,7 @@
 	</head>
 
 	<navigation>
-		<a href="/">Home</a> <a href="/games">Games</a> 
+		<a href="/">Home</a> <a href="/games">Games</a>  <a href="/login">Log In</a>
 	</navigation>
 
 	<body>
@@ -19,7 +19,8 @@
 
 <style lang="scss">
 	@use "sass:color";
-
+	
+	$background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 	$primary-color: #5c3859;
 	$primary-color1: color.scale($primary-color, $lightness: 10%);
 	$secondary-color: #ff5722;
@@ -30,12 +31,12 @@
 		margin: 0;
 		width: 100%;
 		height: 100%;
+		background: $background;
 	}
 	navigation {
 		display: flex;
 		flex-direction: row;
 		justify-content: left;
-		width:100%;
 		background-color: $primary-color;
 		padding: 1rem;
 

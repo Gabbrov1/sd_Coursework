@@ -1,45 +1,71 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 
-import os,pyodbc
+import os,pyodbc,math
 from dotenv import load_dotenv
 
 
 app = Flask(__name__)
 load_dotenv() # Load environment variables from .env file
-#=======================================================================================
-# Specific route with CORS enabled example. DELETE
-#@app.route("/api/data")
-#@cross_origin(origin="http://localhost:4321")
-#def data():
-#    return {"msg": "Hello"}
-#=======================================================================================
-
 
 # Enable Cross-Origin Resource Sharing (CORS) for the specified origin
 CORS(app,resources={r"/*": {"origins": "http://localhost:4321"}})
 
-global conn
-
-connection_string = (
-    "DRIVER={ODBC Driver 17 for SQL Server};"
-    f"SERVER={os.getenv('Server', 'localhost')};"
-    f"DATABASE={os.getenv('Database')};"
-    f"UID={os.getenv('UserID')};"
-    f"PWD={os.getenv('Password')};"
-)# Establish the database connection using environment variables
 
 
+def create_connection():
+    # Establish the database connection string using environment variables
+    connection_string = (
+        "DRIVER={ODBC Driver 17 for SQL Server};"
+        f"SERVER={os.getenv('Server', 'localhost')};"
+        f"DATABASE={os.getenv('Database')};"
+        f"UID={os.getenv('UserID')};"
+        f"PWD={os.getenv('Password')};"
+    )
+    conn = pyodbc.connect(connection_string)
+    return conn
+
+#================= API Routes ============================
 @app.route('/api/hello', methods=['GET'])
 def hello():
-    return jsonify({"message":" Hello Chicken Nugget! "})
+    return jsonify({"message":" Hello and welcome to [Website]! "})
 
-@app.route('/api/games', methods=['GET'])
+@app.route('/api/games/', methods=['GET'])
 def games():
-    return getGamesByPage(0)
+    pageNr = request.args.get('pageNr', default=0, type=int)
+    rows = request.args.get('rows', default=10, type=int)
+    
+    if pageNr < 0:
+        pageNr = 0
+    if rows < 1:
+        rows = 1
+    
+    conn = create_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT COUNT(*) FROM Games;")
+    total_items = cursor.fetchone()[0]
+    
+    conn.close()
+    games_list = getGamesByPage(pageNr,rows)
+    total_pages = math.ceil(total_items / rows) if rows > 0 else 1
+    
+    return jsonify({
+        "total_pages": total_pages,
+        "data": games_list
+        })
 
+@app.route('/api/GET', methods=['GET'])
+def GET():
+    return jsonify({"message": "Hello, World!"})
 
-def getGamesByPage(page):
+@app.route('/api/POST', methods=['POST'])
+def POST():
+    return (formatText,200)
+
+#================= Supporting Functions ============================
+
+def getGamesByPage(page = 0, rows_per_page=10):    
+    offset = page * rows_per_page
     sql = f"""
     Select
     g.ID,
@@ -59,10 +85,10 @@ def getGamesByPage(page):
     ) AS Consoles
     FROM Games g
     ORDER BY g.ID
-    OFFSET 0 ROWS
-    FETCH NEXT 10 ROWS ONLY;
+    OFFSET {offset} ROWS
+    FETCH NEXT {rows_per_page} ROWS ONLY;
     """
-    conn = pyodbc.connect(connection_string)
+    conn = create_connection()
     print("Database connection established.")
 
     cursor = conn.cursor()
@@ -83,15 +109,7 @@ def getGamesByPage(page):
     #==============================================
 
     conn.close()
-    return jsonify( games_list)
-
-@app.route('/api/GET', methods=['GET'])
-def GET():
-    return jsonify({"message": "Hello, World!"})
-
-@app.route('/api/POST', methods=['POST'])
-def POST():
-    return (formatText,200)
+    return games_list
 
 def formatText():
     return "This is a temporary debug route."

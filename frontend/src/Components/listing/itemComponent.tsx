@@ -1,3 +1,4 @@
+import { number } from "astro:schema";
 import { useEffect, useState } from "react";
 
 export interface Game {
@@ -8,18 +9,33 @@ export interface Game {
   Consoles: string | null;
 }
 
+export interface responseData {
+  total_pages: number;
+  data: Game[];
+}
+
 
 export default function GameList() {
-  const [games, setGames] = useState<any[]>([]);
+  const [games, setGames] = useState<Game[]>([]);
+  const [pageNumber, SetPageNumber] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
+  
+  function loadGames(page: number, rows: number) {
+    return fetch(`http://localhost:5000/api/games?pageNr=${page}&rows=${rows}`)
+      .then(res => res.json());
+  }
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/games")
-      .then(res => res.json())
-      .then(data => setGames(data));
-  }, []);
+    loadGames(pageNumber, 2)
+      .then((data: responseData) => {
+        setGames(data.data);
+        setTotalPages(data.total_pages);
+      })
+      .catch(err => console.error("Error:", err));
+  }, [pageNumber]);
 
   return (
-    <div>
+    <div className="gamesHolder">
       {games.map(game => (
         <div  className="game" key={game.ID}>
           <div className="game-top">
@@ -43,12 +59,22 @@ export default function GameList() {
           <div className="game-bottom">
               <p  className="game-description">{game.Description}</p>
           </div>
-
-          
-          
-
         </div>
       ))}
+      <div className="pagination">
+        
+        <button onClick={() => SetPageNumber(pageNumber-1)}>
+          Prev
+        </button>
+        {Array.from({ length: totalPages }, (_, i) => i + 1).map(num => (
+          <a key={num} onClick={() => SetPageNumber(num-1)} className={num-1 === pageNumber ? "active" : ""}>
+            {num}
+          </a>
+        ))}
+        <button onClick={() => SetPageNumber(pageNumber+1)}>
+          Next
+        </button>
+      </div>
     </div>
   );
 }

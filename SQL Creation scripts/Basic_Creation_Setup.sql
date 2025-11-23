@@ -1,10 +1,16 @@
 use sysDevDB
 
+
+DECLARE @username NVARCHAR(32) = 'webUserAdmin';
+DECLARE @password NVARCHAR(32) = '';
+
+
 CREATE TABLE Users(
 	ID INT IDENTITY(0,1) PRIMARY KEY,
 	Username NVARCHAR(32) NOT NULL,
 	PassHash NVARCHAR(32) NOT NULL,
 	ProfileImgLink NVARCHAR(MAX) NULL,
+	isAdmin BIT NOT NULL DEFAULT 0
 
 );
 
@@ -47,3 +53,27 @@ CREATE TABLE GamesConsoles(
     FOREIGN KEY (ConsoleID) REFERENCES Consoles(ID)
 
 );
+
+
+----------------------------------------
+--   SQL User Creation Script		  --
+----------------------------------------
+
+DECLARE @username NVARCHAR(32) = '';
+DECLARE @password NVARCHAR(32) = '';
+DECLARE @sql NVARCHAR(MAX);
+
+
+-- 1. Create SQL Login
+SET @sql = 'CREATE LOGIN [' + @username + '] WITH PASSWORD = ''' + @password + ''';';
+EXEC(@sql);
+
+
+-- 2. Create User in Database and Assign Roles
+SET @sql = '
+USE sysDevDB;
+CREATE USER [' + @username + '] FOR LOGIN [' + @username + '];
+ALTER ROLE db_datareader ADD MEMBER [' + @username + '];
+ALTER ROLE db_datawriter ADD MEMBER [' + @username + '];';
+
+EXEC(@sql);
