@@ -65,6 +65,8 @@ export default function GameList() {
           <div className="game-bottom">
               <p  className="game-description">{game.Description}</p>
           </div>
+          <a href={`/games/${game.ID}`}>Open project</a>
+
         </div>
       ))}
       <div className="pagination">

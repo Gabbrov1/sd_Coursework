@@ -44,19 +44,92 @@ def games():
         "data": games_list
         })
 
+@app.route('/api/games/<int:id>', methods=['GET'])
+def game(id):
+
+    sql = """
+        SELECT
+        g.ID,
+        g.GameName as Title,
+        g.GameDescription AS Description,
+
+        GA.ArticleBody,
+        GA.CommentsLink,
+
+        (
+            SELECT STRING_AGG(c.name, ', ')
+            FROM Categories c
+            JOIN GamesCategories gc ON gc.CategoryID = c.ID
+            WHERE gc.GameID = g.ID
+        ) AS Categories,
+        (
+            SELECT STRING_AGG(con.name, ', ')
+            FROM Consoles con
+            JOIN GamesConsoles gcon ON gcon.ConsoleID = con.ID
+            WHERE gcon.GameID = g.ID
+        ) AS Consoles,
+        
+        (
+            SELECT STRING_AGG(AI.ImageURL, ', ')
+            FROM ArticleImages AI
+            JOIN GameArticles GA ON GA.ID = AI.ArticleID
+            WHERE GA.GameID = g.ID
+        ) AS ImageURLs
+
+        FROM Games g
+        OUTER APPLY (
+            SELECT TOP (1)
+                ga.ID,
+                ga.ArticleBody,
+                ga.CommentsLink
+            FROM GameArticles ga
+            WHERE ga.GameID = g.ID
+            ORDER BY ga.ID
+        ) AS GA
+        WHERE g.ID = ?;
+
+    """
+    conn = create_connection()
+    cursor = conn.cursor()
+    cursor.execute(sql, (id,))
+
+    row = cursor.fetchone()
+    if row:
+        game = {
+            "ID": row.ID,
+            "Title": row.Title,
+            "Description": row.Description,
+            "ArticleBody": row.ArticleBody,
+
+            "CommentsLink": row.CommentsLink,
+            "Categories": row.Categories,
+            "Consoles": row.Consoles,
+
+
+            "ImageURLs": row.ImageURLs.split(', ') if row.ImageURLs else []
+        }
+    
+    else:
+        
+        return jsonify({"error": "Game not found"}), 404
+    
+    conn.close()
+
+    return jsonify(game),200
+
 @app.route('/api/GET', methods=['GET'])
 def GET():
     return jsonify({"message": "Hello, World!"})
 
 @app.route('/auth/login', methods=['POST'])
 def LogIn():
-    username = request.json.get('username', None)
-    passwordHash = request.json.get('passwordHash', None)
+    username = request.form.get('username')
+    passwordHash = request.form.get('password')
     
 
 
 
-    return ()
+    return jsonify({"message": "Received", "username": username}), 200
 
 #================= Supporting Functions ============================
 

@@ -1,6 +1,5 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import logIn from '../components/signInProcess';
 ---
 
 
@@ -87,7 +86,7 @@ import logIn from '../components/signInProcess';
     <div class="content">
         <div class="login-container">
             <h1>Login</h1>
-            <form>
+            <form action="http://localhost:5000/auth/login" method="POST">
                 <div class="form-group">
                     <label for="username">Username</label>
                     <input type="text" id="username" name="username" required />

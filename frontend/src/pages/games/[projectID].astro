@@ -1,0 +1,34 @@
+---
+import Layout from "../../layouts/Layout.astro";
+
+interface GameArticle {
+  ID: number;
+  Title: string;
+  Description: string;
+  ArticleBody: string;
+  CommentsLink: string;
+  Categories: string[];
+  Consoles: string[];
+  ImageURLs: string[];
+}
+const { projectID } = Astro.params;
+const game = await fetch(`http://localhost:5000/api/games/${projectID}`).then(r => r.json() as Promise<GameArticle>);
+---
+
+<head>
+    <title>{game.Title} | Page</title>
+
+</head>
+
+<Layout>
+  <h1> Title: {game.Title}</h1>
+
+  <p> Description: {game.Description}</p>
+  <div>
+    <p>
+      {game.ArticleBody}
+    </p>
+
+    
+
+</Layout>

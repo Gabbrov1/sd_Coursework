@@ -54,6 +54,22 @@ CREATE TABLE GamesConsoles(
 
 );
 
+CREATE TABLE GamesArticles(
+	ID INT IDENTITY(0,1) PRIMARY KEY,
+	GameID INT NOT NULL,
+	ArticleBody NVARCHAR(MAX) NOT NULL,
+	CommentsLink NVARCHAR(MAX) NULL
+);
+
+CREATE TABLE ArticleImages(
+	ID INT IDENTITY(0,1) PRIMARY KEY,
+	ArticleID INT NOT NULL,
+	ImageURL NVARCHAR(MAX) NOT NULL,
+
+	FOREIGN KEY (ArticleID) REFERENCES GamesArticles(ID)
+
+);
+
 
 ----------------------------------------
 --   SQL User Creation Script		  --
