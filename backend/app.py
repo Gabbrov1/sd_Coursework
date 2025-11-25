@@ -13,17 +13,7 @@ CORS(app,resources={r"/*": {"origins": "http://localhost:4321"}})
 
 
 
-def create_connection():
-    # Establish the database connection string using environment variables
-    connection_string = (
-        "DRIVER={ODBC Driver 17 for SQL Server};"
-        f"SERVER={os.getenv('Server', 'localhost')};"
-        f"DATABASE={os.getenv('Database')};"
-        f"UID={os.getenv('UserID')};"
-        f"PWD={os.getenv('Password')};"
-    )
-    conn = pyodbc.connect(connection_string)
-    return conn
+
 
 #================= API Routes ============================
 @app.route('/api/hello', methods=['GET'])
@@ -58,11 +48,30 @@ def games():
 def GET():
     return jsonify({"message": "Hello, World!"})
 
-@app.route('/api/POST', methods=['POST'])
-def POST():
-    return (formatText,200)
+@app.route('/auth/login', methods=['POST'])
+def LogIn():
+    username = request.json.get('username', None)
+    passwordHash = request.json.get('passwordHash', None)
+    
+
+
+
+    return ()
 
 #================= Supporting Functions ============================
+
+def create_connection():
+    # Establish the database connection string using environment variables
+    connection_string = (
+        "DRIVER={ODBC Driver 17 for SQL Server};"
+        f"SERVER={os.getenv('Server', 'localhost')};"
+        f"DATABASE={os.getenv('Database')};"
+        f"UID={os.getenv('UserID')};"
+        f"PWD={os.getenv('Password')};"
+    )
+    conn = pyodbc.connect(connection_string)
+    return conn
+
 
 def getGamesByPage(page = 0, rows_per_page=10):    
     offset = page * rows_per_page
@@ -111,7 +120,12 @@ def getGamesByPage(page = 0, rows_per_page=10):
     conn.close()
     return games_list
 
-def formatText():
+def getGamesByFilters(params):
+    params.get('category', None)
+    params.get('console', None)
+    params.get('searchTerm', None)
+    # Implement filtering logic here
+
     return "This is a temporary debug route."
 
 if __name__ == '__main__':

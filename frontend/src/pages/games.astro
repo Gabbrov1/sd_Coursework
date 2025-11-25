@@ -1,5 +1,5 @@
 ---
-import Layout from "../Layouts/Layout.astro";
+import Layout from "../layouts/Layout.astro";
 import GameList from "../Components/listing/itemComponent";
 import "../styles/games.scss";
 ---
@@ -14,7 +14,20 @@ import "../styles/games.scss";
   
   <Layout>
     <h1>Games Page</h1>
-    <GameList client:load/>
+    <div class="GamesHolder">
+      <GameList client:load/>
+    </div>
   </Layout>
   
 </html>
+
+<style>
+  .GamesHolder {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  </style>
