@@ -34,6 +34,14 @@
     display: flex;
     gap: 1%;
 }
+.game-categories-holder li, .game-consoles-holder li{
+    background-color: #eee;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    font-size: 0.9em;
+    color: #333;
+    border-radius: 12px;
+}
 
 .pagination{
     display: flex;

@@ -11,6 +11,7 @@
     "start:flask": "python backend/app.py"
   },
   "dependencies": {
+    "@google-cloud/storage": "^7.17.3",
     "astro": "^5.15.8"
   }
 }
