@@ -1,8 +1,9 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, redirect
 from flask_cors import CORS
 
-import os,pyodbc,math
+import os,pyodbc,math,bcrypt
 from dotenv import load_dotenv
+
 
 
 app = Flask(__name__)
@@ -72,7 +73,7 @@ def game(id):
         (
             SELECT STRING_AGG(AI.ImageURL, ', ')
             FROM ArticleImages AI
-            JOIN GameArticles GA ON GA.ID = AI.ArticleID
+            JOIN GamesArticles GA ON GA.ID = AI.ArticleID
             WHERE GA.GameID = g.ID
         ) AS ImageURLs
 
@@ -82,7 +83,7 @@ def game(id):
                 ga.ID,
                 ga.ArticleBody,
                 ga.CommentsLink
-            FROM GameArticles ga
+            FROM GamesArticles ga
             WHERE ga.GameID = g.ID
             ORDER BY ga.ID
         ) AS GA
@@ -122,14 +123,41 @@ def GET():
     return jsonify({"message": "Hello, World!"})
 
 @app.route('/auth/login', methods=['POST'])
-def LogIn():
+def log_in():
+    username = request.form.get('username')
+    password = request.form.get('password')
+
+    if not username or not password:
+        return jsonify({"error": "Missing username or password"}), 400
+
+    user = checkDetails(username, password)
+
+    if not user:
+        # Invalid username or password
+        return jsonify({"error": "Invalid username or password"}), 401
+
+    # Successful login
+    return jsonify({"message": "Login successful", "user": user}), 200
+
+@app.route('/auth/register/', methods=['POST'])
+def newAccount():    
     username = request.form.get('username')
     passwordHash = request.form.get('password')
     
-
-
-
-    return jsonify({"message": "Received", "username": username}), 200
+    response = createAccount(username,passwordHash)
+    if response==True:
+        
+        return redirect('http://localhost:4321/login')
+    else:
+        return jsonify({"message": "Error", "username": response})
+    
+@app.route('/auth/pass-controll/<option>/', methods = ['POST'])
+def passManagement():
+    username = request.form.get("Username")
+    password = request.form.get("password")
+    
+    
+    
 
 #================= Supporting Functions ============================
 
@@ -145,6 +173,63 @@ def create_connection():
     conn = pyodbc.connect(connection_string)
     return conn
 
+
+def checkDetails(username, password):
+    conn = create_connection()
+    cursor = conn.cursor()
+
+    sql = "SELECT ID, Username, PassHash, isAdmin FROM Users WHERE Username = ?"
+    cursor.execute(sql, (username,))
+    row = cursor.fetchone()
+
+    if not row:
+        return False
+
+    stored_hash = row.PassHash.encode("utf-8")  # bcrypt needs bytes
+    entered_pw = password.encode("utf-8")
+
+    if bcrypt.checkpw(entered_pw, stored_hash):
+        return {
+            "ID": row.ID,
+            "Username": row.Username,
+            "isAdmin": row.isAdmin
+        }
+    else:
+        return False
+    
+def setPassword(username,oldPass,newPass):
+    sql = """
+                UPDATE Users
+                SET PasswordHash = ? 
+                WHERE Username = ?
+                AND PassHash = ?;
+            """
+    with create_connection as conn:
+        with conn.cursor() as cursor:   
+            oldHashed = bcrypt.hashpw(oldPass.encode(), bcrypt.gensalt())
+            newHashed = bcrypt.hashpw(newPass.encode(), bcrypt.gensalt())
+            cursor.execute(sql,(newHashed,username,oldHashed))
+    return ("Success",200)
+
+def createAccount(username,password):
+    conn = create_connection()
+    with conn.cursor() as cursor:  
+        hashed = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
+        try:
+            cursor.execute(
+                "INSERT INTO Users (Username, PassHash) VALUES (?, ?)",
+                (username, hashed.decode())
+            )
+            conn.commit()
+            return True
+
+        except Exception as e:
+            print("Insert failed:", e)
+            return False
+            
+    
+             
+            
 
 def getGamesByPage(page = 0, rows_per_page=10):    
     offset = page * rows_per_page
