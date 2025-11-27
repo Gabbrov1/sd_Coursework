@@ -1,0 +1,61 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<head>
+  <title>Account</title>
+</head>
+
+<Layout>
+  <div id="account-root">
+    <p>Loading account...</p>
+  </div>
+
+  <script>
+    (async () => {
+      try {
+        const res = await fetch("http://localhost:5000/auth/status", {
+          method: "GET",
+          credentials: "include",
+        });
+        const data = await res.json();
+
+        if (!data.logged_in) {
+          window.location.href = "/auth/login";
+          return;
+        }
+
+        const root = document.getElementById("account-root");
+        if (root) {
+          root.innerHTML = `
+            <h1>Account</h1>
+            <p>Welcome, ${data.user?.Username || "User"}!</p>
+          `;
+        }
+      } catch (err) {
+        console.error("Error fetching auth status:", err);
+        window.location.href = "/auth/login";
+      }
+    })();
+  </script>
+</Layout>
+<style scoped>
+  #account-root {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    max-width: 600px;
+    margin: 2rem auto;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  h1 {
+    margin-top: 0;
+    color: #333;
+  }
+
+  p {
+    font-size: 1.2rem;
+    color: #666;
+  }
+</style>

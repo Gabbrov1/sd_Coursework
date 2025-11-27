@@ -1,3 +1,6 @@
+---
+import NavBar from "../Components/Navigation/nav";
+---
 <!doctype html>
 <html lang="en">
 	<head>
@@ -8,9 +11,7 @@
 		<title>Astro Basics</title>
 	</head>
 
-	<navigation>
-		<a href="/">Home</a> <a href="/games">Games</a>  <a href="/login">Log In</a>
-	</navigation>
+	<NavBar client:load/>
 
 	<body>
 		<slot />

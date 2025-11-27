@@ -1,25 +1,32 @@
-from flask import Flask, request, jsonify, redirect
+from flask import Flask, request, jsonify, redirect, session
 from flask_cors import CORS
 
 import HelperFunctions.Database as db
 import HelperFunctions.Auth  as auth
 from HelperFunctions.Database import create_connection
 
-import math
+import math,os
 
+dotenv_path = os.path.join(os.path.dirname(__file__), '..', '.env')
+from dotenv import load_dotenv
+load_dotenv(dotenv_path)
 
 
 app = Flask(__name__)
 
 # Enable Cross-Origin Resource Sharing (CORS) for the specified origin
-CORS(app,resources={r"/*": {"origins": "http://localhost:4321"}})
+CORS(app,resources={r"/*": {"origins": "http://localhost:4321"}},supports_credentials=True)
 
+# Set a secret key for session management
+app.secret_key = os.getenv("SECRET_KEY", "dev-secret-key")
 
 #================= API Routes ============================
+#Test route, returns message
 @app.route('/api/hello', methods=['GET'])
 def hello():
     return jsonify({"message":" Hello and welcome to [Website]! "})
 
+#Returns Paginated list of games
 @app.route('/api/games/', methods=['GET'])
 def games():
     pageNr = request.args.get('pageNr', default=0, type=int)
@@ -117,10 +124,8 @@ def game(id):
 
     return jsonify(game),200
 
-@app.route('/api/GET', methods=['GET'])
-def GET():
-    return jsonify({"message": "Hello, World!"})
-
+#===============================================
+#AUTH
 @app.route('/auth/login', methods=['POST'])
 def log_in():
     username = request.form.get('username')
@@ -134,6 +139,11 @@ def log_in():
     if not user:
         # Invalid username or password
         return jsonify({"error": "Invalid username or password"}), 401
+    
+    # Store in session
+    session['user_id'] = user["ID"]
+    session['username'] = user["Username"]
+    session['is_admin'] = user.get("isAdmin", False)
 
     # Successful login
     return jsonify({"message": "Login successful", "user": user}), 200
@@ -144,17 +154,33 @@ def newAccount():
     passwordHash = request.form.get('password')
     
     response = auth.createAccount(username,passwordHash)
+    
+    
     if response==True:
-        
         return redirect('http://localhost:4321/login')
     else:
         return jsonify({"message": "Error", "username": response})
     
-@app.route('/auth/pass-controll/<option>/', methods = ['POST'])
-def passManagement():
-    username = request.form.get("Username")
-    password = request.form.get("password")
-    
+
+@app.route('/auth/logout', methods=['POST'])
+def log_out():
+    session.clear()
+    return redirect('http://localhost:4321/')
+
+@app.route('/auth/status', methods=['GET'])
+def auth_status():
+    if 'user_id' in session:
+        return jsonify({
+            "logged_in": True,
+            "user": {
+                "ID": session['user_id'],
+                "Username": session['username'],
+                "isAdmin": session.get('is_admin', False)
+            }
+        }), 200
+    else:
+        return jsonify({"logged_in": False}), 200
+
 #===============================================
 #custom wrappers
 

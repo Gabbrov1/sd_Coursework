@@ -31,6 +31,7 @@ export default function AuthComponent() {
         try {
             const res = await fetch(url, {
                 method: "POST",
+                credentials: "include",
                 body: formData,
             });
 

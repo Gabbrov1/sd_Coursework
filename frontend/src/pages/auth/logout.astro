@@ -1,0 +1,52 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+// Handle logout
+if (Astro.request.method === 'POST') {
+    // Clear authentication cookie
+    Astro.response.headers.append('Set-Cookie', 'auth=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 UTC;');
+    return Astro.redirect('/');
+}
+---
+
+<Layout title="Logout">
+    <div class="logout-container">
+    <h1>Logout</h1>
+    <p>Are you sure you want to logout?</p>
+
+    <form action="http://localhost:5000/auth/logout" method="POST">
+        <button class="btn-logout">Confirm Logout</button>
+        <a href="/" class="btn-cancel">Cancel</a>
+    </form>
+</div>
+
+</Layout>
+
+<style>
+    .logout-container {
+        max-width: 400px;
+        margin: 2rem auto;
+        padding: 2rem;
+        text-align: center;
+    }
+
+    .btn-logout, .btn-cancel {
+        padding: 0.5rem 1rem;
+        margin: 0.5rem;
+        border-radius: 4px;
+        text-decoration: none;
+        cursor: pointer;
+        border: none;
+        font-size: 1rem;
+    }
+
+    .btn-logout {
+        background-color: #dc2626;
+        color: white;
+    }
+
+    .btn-cancel {
+        background-color: #6b7280;
+        color: white;
+    }
+</style>
