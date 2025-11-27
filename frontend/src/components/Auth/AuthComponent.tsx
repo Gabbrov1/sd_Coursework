@@ -25,8 +25,8 @@ export default function AuthComponent() {
         const formData = new FormData(form);
 
         const url = stateRegister
-            ? "http://localhost:5000/auth/register/"
-            : "http://localhost:5000/auth/login/";
+            ? "http://localhost:5000/auth/register"
+            : "http://localhost:5000/auth/login";
 
         try {
             const res = await fetch(url, {
