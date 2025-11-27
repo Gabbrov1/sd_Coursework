@@ -57,6 +57,4 @@ aws_credentials
 credentials
 
 backend/SQL_details.txt
-
-.env
-.env
+backend/secrets/
