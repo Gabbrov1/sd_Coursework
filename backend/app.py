@@ -1,3 +1,4 @@
+import math,os, asyncio
 from flask import Flask, request, jsonify, redirect, session
 from flask_cors import CORS
 
@@ -5,11 +6,13 @@ import HelperFunctions.Database as db
 import HelperFunctions.Auth  as auth
 from HelperFunctions.Database import create_connection
 
-import math,os
-
-dotenv_path = os.path.join(os.path.dirname(__file__), '..', '.env')
 from dotenv import load_dotenv
-load_dotenv(dotenv_path)
+load_dotenv()
+
+
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
+
+BUCKET_NAME = os.getenv("GCS_BUCKET_NAME")
 
 
 app = Flask(__name__)
@@ -182,8 +185,33 @@ def auth_status():
         return jsonify({"logged_in": False}), 200
 
 #===============================================
-#custom wrappers
+#Comments
+@app.route("/api/games/<int:gameID>/comments", methods=['GET','POST'])
+def comments(gameID):
+    if request.method == 'POST':
+        
+        db.setComment()
+        
+        return jsonify({"message": "Comment added successfully"}), 201
 
+    elif request.method == 'GET':  # GET request
+            
+        comments = db.getComments(gameID)
+        return jsonify({"comments": comments}), 200
+    else:
+        return jsonify({"error": "Invalid request method"}), 405
+
+@app.route('/api/users', methods=['GET'])
+def get_users():
+    users = db.getAllUsers()
+    return jsonify({"users": users}), 200
+
+@app.route('/api/user/<int:userID>', methods=['GET'])
+def get_user(userID):
+    user = db.getUser(userID)
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+    return jsonify(user), 200
 
 if __name__ == '__main__':
     app.run(port=5000,debug=True)

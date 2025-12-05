@@ -8,6 +8,7 @@ export interface Game {
   Description: string;
   Categories: string | null;
   Consoles: string | null;
+  Images: string[];
 }
 
 export interface responseData {
@@ -58,7 +59,7 @@ export default function GameList() {
               </ul>
             </div>
             <div className="top-right">
-                <ImageCarousel/>
+                <ImageCarousel images={game.Images}/>
             </div>
           </div>
           

@@ -1,16 +1,20 @@
 import { useState } from "react";
 
 
-export default function GameImageList() {
-
-    const images = [
-        "https://picsum.photos/seed/10/300/",
-        "https://picsum.photos/seed/1/300",
-        "https://picsum.photos/seed/2/300",
-        "https://picsum.photos/seed/3/300"
-    ];
+export default function GameImageList({ images=[] }: { images: string[] }) {
 
     const [currentImage,setCurrentImage] = useState(0);
+
+    if (images.length === 0) {
+        return (
+        <div className="image-carousel">
+            <div>
+            <h1>NO IMAGES</h1>
+            </div>
+        </div>
+        );
+    }
+
     return (        
         <div className="image-carousel">
             <div className="image-holder">

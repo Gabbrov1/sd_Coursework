@@ -1,5 +1,7 @@
 ---
 import Layout from "../../layouts/Layout.astro";
+import Comments from "../../Components/listing/commentsComponent";
+import '../../styles/mainPage.scss';
 
 interface GameArticle {
   ID: number;
@@ -21,14 +23,17 @@ const game = await fetch(`http://localhost:5000/api/games/${projectID}`).then(r 
 </head>
 
 <Layout>
-  <h1> Title: {game.Title}</h1>
+  <div class="articleContent">
+    <h1> Title: {game.Title}</h1>
 
-  <p> Description: {game.Description}</p>
-  <div>
-    <p>
-      {game.ArticleBody}
-    </p>
+    <p> Description: {game.Description}</p>
+    <div>
+      <p>
+        {game.ArticleBody}
+      </p>
 
-    
+      <Comments gameID={game.ID} client:load />
+    </div>
+  </div>
 
 </Layout>

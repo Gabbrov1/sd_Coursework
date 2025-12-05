@@ -1,0 +1,61 @@
+{
+  "games": {
+    "Skyrim": {
+      "title": "Skyrim",
+      "rating": 9.5,
+      "gameId": 1,
+      "comments": [
+        {
+          "commentId": 0,
+          "username": "Dragonborn99",
+          "comment": "An epic adventure in a vast open world!",
+          "createdAt": "2023-10-01T12:34:56Z",
+          "parentId": null
+        },
+        {
+          "commentId": 1,
+          "username": "MageMaster",
+          "comment": "L take.",
+          "createdAt": "2023-10-02T15:20:30Z",
+          "parentId": 0
+        },
+        {
+          "commentId": 2,
+          "username": "StealthArcher",
+          "comment": "Loved the stealth mechanics and archery skills.",
+          "createdAt": "2023-10-03T09:45:12Z",
+          "parentId": null
+        }
+      ]
+    },
+
+    "MinecraftJavaEdition": {
+      "title": "Minecraft Java Edition",
+      "rating": 9.5,
+      "gameId": 2,
+      "comments": [
+        {
+          "commentId": 0,
+          "username": "BlockBuilder",
+          "comment": "A creative sandbox masterpiece!",
+          "createdAt": "2023-10-01T12:34:56Z",
+          "parentId": null
+        },
+        {
+          "commentId": 1,
+          "username": "MageMaster",
+          "comment": "DIGGY HOLE",
+          "createdAt": "2023-10-02T15:20:30Z",
+          "parentId": 0
+        },
+        {
+          "commentId": 2,
+          "username": "StealthArcher",
+          "comment": "Amazing game, loved it.",
+          "createdAt": "2023-10-03T09:45:12Z",
+          "parentId": null
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,107 @@
+.articleContent {
+    margin: 4rem;
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    background: linear-gradient(
+    to bottom,
+    white,
+    #e6f7ff 
+    );
+    padding: 2rem;
+    border-radius: 10px;
+}
+
+
+.commentsHolder {
+    margin-left: 20px;
+    background-color: #f0f0f0;
+    padding: 2rem;
+    border-radius: 15px;
+}
+
+.reply {
+    margin-left: 20px;
+}
+.comment {
+    background-color: white;
+    padding: 0 1rem 1rem 1rem;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    border: 1px solid #ccc;
+}
+
+.timeStamp {
+    margin-left: 10px;
+    color: rgb(228, 228, 228);
+    font-size: 0.9rem;
+    background: rgba($color: #868686, $alpha: 0.20);
+    border-radius: 5px;
+    padding: 2px 5px;
+}
+
+.commentInteractButton{
+    background-color: #007bff;
+    color: white;
+    border: none;
+    margin:10px 5px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.commentInteractButton:hover {
+    background-color: #0056b3;
+}
+.userTag{
+    display:flex;
+    align-items:center;
+    margin-bottom:10px;
+    background-color: #ccc;
+    padding: 1rem;
+    border-radius: 10px;
+}
+.userAvatar{
+    width:40px;
+    height:40px;
+    background-color:#007bff;
+    border-radius:50%;
+    margin-right:10px;
+}
+
+.commentBox{
+
+    margin:1.5rem;
+    textarea{
+        width:90%;
+        height:60px;
+        border-radius:5px;
+        border:1px solid #ccc;
+        padding:5px;
+        font-size:1rem;
+        resize:none;
+
+        .hidden{
+            display:none;
+        }
+        .shown{
+            display:block;
+        }
+    }
+
+    button{
+        background-color: #0fcfff;
+        color: rgb(54, 54, 54);
+        border: none;
+        margin-top:5px;
+        padding: 5px 10px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        cursor: pointer;
+
+    }
+    .submitCommentButton:hover {
+        background-color: #40eb1e;
+    }
+    .cancelCommentButton:hover {
+        background-color: #ff4d4d;
+    }
+}

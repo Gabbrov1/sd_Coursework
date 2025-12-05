@@ -1,5 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import '../../styles/account.scss';
 ---
 
 <head>
@@ -7,55 +8,85 @@ import Layout from '../../layouts/Layout.astro';
 </head>
 
 <Layout>
-  <div id="account-root">
-    <p>Loading account...</p>
+  <div class="account">
+    <div id="account-root"></div>
+    <div id="userDisplayMain"></div>
   </div>
+  
 
   <script>
-    (async () => {
-      try {
-        const res = await fetch("http://localhost:5000/auth/status", {
-          method: "GET",
-          credentials: "include",
-        });
-        const data = await res.json();
+  (async () => {
+    let userStatResponse;
 
-        if (!data.logged_in) {
-          window.location.href = "/auth/login";
-          return;
-        }
+    try {
+      const userStat = await fetch("http://localhost:5000/auth/status", {
+        method: "GET",
+        credentials: "include",
+      });
 
-        const root = document.getElementById("account-root");
-        if (root) {
-          root.innerHTML = `
-            <h1>Account</h1>
-            <p>Welcome, ${data.user?.Username || "User"}!</p>
-          `;
-        }
-      } catch (err) {
-        console.error("Error fetching auth status:", err);
+      userStatResponse = await userStat.json();
+
+      if (!userStatResponse.logged_in) {
         window.location.href = "/auth/login";
+        return;
       }
-    })();
-  </script>
+    } catch (err) {
+      console.error("Error fetching auth status:", err);
+      window.location.href = "/auth/login";
+      return;
+    }
+    try {
+      const userID = userStatResponse.user?.ID;
+
+      const userDets = await fetch(
+        `http://localhost:5000/api/user/${userID}`,
+        {
+          method: "GET"
+        }
+      );
+
+      if (!userDets.ok) {
+        console.error("Failed to fetch user details:", userDets.status);
+        return;
+      }
+
+      const userDetsResponse = await userDets.json();
+
+      const userRoot = document.getElementById("userDisplayMain");
+
+      if (userRoot) {
+        userRoot.innerHTML = `
+          <div class="userDetails">
+            
+            <p><strong>Username:</strong> ${userDetsResponse.userName}</p>
+            <h4 class="glistening-text">Quote: ${userDetsResponse.quote || ""}</h4>
+
+            <div class="editButtons">
+              <a href="/auth/edit-account">
+                <button class="editButton">Edit Account</button>
+              </a>
+              <a href="/auth/change-password">
+                <button class="editButton">Change Password</button>
+              </a>
+              <a href="/auth/delete-account">
+                <button class="editButton delete">Delete Account</button>
+              </a>
+            </div>
+          </div>
+          
+          <div class="avatarSection">
+            <a id="changeImage">
+              <img class="avatar" src="${userDetsResponse.avatarImage}" alt="Avatar" width="100" />
+              <span>Change Avatar</span>
+            </a>
+          </div>
+          
+        `;
+      }
+    } catch (err) {
+      console.error("Error fetching account info:", err);
+    }
+  })();
+</script>
+
 </Layout>
-<style scoped>
-  #account-root {
-    background: white;
-    padding: 2rem;
-    border-radius: 8px;
-    max-width: 600px;
-    margin: 2rem auto;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
-
-  h1 {
-    margin-top: 0;
-    color: #333;
-  }
-
-  p {
-    font-size: 1.2rem;
-    color: #666;
-  }
-</style>
