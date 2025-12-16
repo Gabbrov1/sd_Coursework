@@ -164,9 +164,6 @@ export default function CommentsComponent(props: { gameID: number }) {
 
         if (cancelled) return;
 
-        console.log("Fetched comments:", fetchedComments);
-        console.log("Fetched users:", fetchedUsers);
-
         setComments(fetchedComments);
         setUsers(fetchedUsers);
       } catch (err) {

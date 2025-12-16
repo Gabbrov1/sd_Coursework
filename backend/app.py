@@ -1,4 +1,4 @@
-import math,os, asyncio
+import math,os
 from flask import Flask, request, jsonify, redirect, session
 from flask_cors import CORS
 
@@ -8,12 +8,6 @@ from HelperFunctions.Database import create_connection
 
 from dotenv import load_dotenv
 load_dotenv()
-
-
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
-
-BUCKET_NAME = os.getenv("GCS_BUCKET_NAME")
-
 
 app = Flask(__name__)
 

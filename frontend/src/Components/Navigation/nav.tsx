@@ -38,6 +38,9 @@ export default function NavBar() {
         <li>
           <a href="/games">Games</a>
         </li>
+        <li>
+          <a href="/TestPage">Test</a>
+        </li>
       </ul>
 
       <ul className="nav-links">
