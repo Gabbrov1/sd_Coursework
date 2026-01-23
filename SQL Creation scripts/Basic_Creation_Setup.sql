@@ -93,3 +93,5 @@ ALTER ROLE db_datareader ADD MEMBER [' + @username + '];
 ALTER ROLE db_datawriter ADD MEMBER [' + @username + '];';
 
 EXEC(@sql);
+
+ALTER TABLE Users ADD MongoId VARCHAR(24);

@@ -1,34 +1,31 @@
 import React, { useState } from 'react';
-import './deleteAccount.css';
+import '../../../styles/deleteAccount.scss';
 
 const DeleteAccount: React.FC = () => {
     const [isConfirming, setIsConfirming] = useState(false);
-    const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
     const handleDeleteClick = () => {
+        console.warn("Delete account button clicked");
         setIsConfirming(true);
     };
 
     const handleCancel = () => {
         setIsConfirming(false);
-        setPassword('');
         setError('');
     };
 
     const handleConfirmDelete = async () => {
-        if (!password.trim()) {
-            setError('Password is required');
-            return;
-        }
 
         setLoading(true);
         try {
             const response = await fetch('/api/auth/delete-account', {
-                method: 'DELETE',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ password }),
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json',
+
+                },
             });
 
             if (!response.ok) {
@@ -57,14 +54,7 @@ const DeleteAccount: React.FC = () => {
                 </div>
             ) : (
                 <div className="confirmation-form">
-                    <p>Enter your password to confirm account deletion:</p>
-                    <input
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        placeholder="Enter your password"
-                        disabled={loading}
-                    />
+                    <p>Are you sure you want to delete your account? This action is irreversible.</p>
                     {error && <p className="error">{error}</p>}
                     
                     <div className="button-group">

@@ -1,57 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
+import type { Comment, User } from "./commentHelpers/customTypes";
 
-export interface Comment {
-  commentID: number;
-  gameID: number;
-  parentID: number | null;
+import CommentActions from "./commentHelpers/commentFunctions";
+import { getComments, getUsers } from "./commentHelpers/asyncFunctions";
 
-  createdAt: string;
-  userName: string;
-  commentText: string;
-  children?: Comment[];
-}
-export interface User {
-  userID: number;
-  userName: string;
-  avatarImage: string;
-  quote: string;
-  customBackground: string;
-}
+// Helper functions
 
-type getUsersResponse = {
-  users: User[];
-}
 
-async function getComments(gameID: number): Promise<Comment[]> {
-  const res = await fetch(
-    `http://localhost:5000/api/games/${gameID}/comments`,
-    { 
-      method: "GET",
-      credentials: "include"
-    }
-  );
-
-  if (!res.ok) {
-    throw new Error(`Failed to fetch comments: ${res.status}`);
-  }
-
-  const data: { comments: Comment[] } = await res.json();
-  return data.comments;
-}
-async function getUsers(): Promise<User[]> {
-  const res = await fetch(
-    `http://localhost:5000/api/users`,
-    { 
-      method: "GET",
-      credentials: "include"
-  }
-  );
-  if (!res.ok) {
-    throw new Error(`Failed to fetch user: ${res.status}`);
-  }
-  const data: getUsersResponse = await res.json();
-  return data.users;
-}
 function formatUnit(value: number, unit: string): string {
   const suffix = value === 1 ? "" : "s";
   return `${value} ${unit}${suffix} ago`;
@@ -89,42 +44,24 @@ function getTimestamp(date: string): string {
 }
 
 
-function CommentActions() {
+function CommentContent({ comment, users, gameID }: { comment: Comment; users: Record<string, User>; gameID: number }){
+  
   return (
     <>
-      <button className="commentInteractButton">Comment</button>
-      <button className="commentInteractButton">Like</button>
-      <button className="commentInteractButton">Share</button>
-      <div className='commentBox ${commentToggle ? "shown" : "hidden"}'>
-        <textarea placeholder="Write a reply..." />
-        <div>
-          <button className="submitCommentButton">Submit</button>
-          <button className="cancelCommentButton" >Cancel</button>
-        </div>
-      </div>
-    </>
-  );
-}
-
-function CommentContent({ comment, users }: { comment: Comment; users: User[] }){
-  const user: User | any = users.find(u => u.userName == comment.userName) ?? {};
-
-  return (
-    <>
-      <p className="userTag" style={{background: user.customBackground? user.customBackground : ''}}>
-        <span className="userAvatar" style={{background: `url(${user.avatarImage? user.avatarImage:''})`}}/>
-        <strong>{comment.userName}</strong>
+      <p className="userTag" style={{background: users[comment.userName]?.customBackground ?? ''}}>
+        <span className="userAvatar" style={{background: `url(${users[comment.userName]?.avatarImage? users[comment.userName].avatarImage:''})`}}/>
+        <strong key={comment.userID}>{comment.userName}</strong>
         <span className="timeStamp">{getTimestamp(comment.createdAt)}</span>
       </p>
       <p>{comment.commentText}</p>
-      <CommentActions />
+      <CommentActions root={comment.parentID} gameID={gameID} />
     </>
   );
 }
 
 // ---------- Recursive replies ----------
 
-function renderReplies(replies: Comment[], users:User[]): any | null {
+function renderReplies(replies: Comment[], users: Record<string, User>): any | null {
   if (!replies || replies.length === 0) {
     return null;
   }
@@ -132,9 +69,9 @@ function renderReplies(replies: Comment[], users:User[]): any | null {
   return (
     <div className="repliesHolder">
       {replies.map((reply) => (
-        <div key={reply.commentID} className="reply">
+        <div key={reply._id} className="reply">
           <div className="comment">
-            <CommentContent comment={reply} users={users}/>
+            <CommentContent comment={reply} users={users} gameID={props.gameID}/>
             {renderReplies(reply.children ?? [], users)}
           </div>
         </div>
@@ -147,7 +84,6 @@ export default function CommentsComponent(props: { gameID: number }) {
   const [comments, setComments] = useState<Comment[]>([]);
   const [users, setUsers] = useState<User[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [commentToggle, setCommentToggle] = useState<boolean>(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -175,12 +111,18 @@ export default function CommentsComponent(props: { gameID: number }) {
 
     load();
 
-    // Cleanup in case component unmounts mid-request
+    // Cleanup in case component unmounts mid-request (AI suggestion)
     return () => {
       cancelled = true;
     };
   }, [props.gameID]);
-
+  
+  // Memoized user lookup map
+  //Changed from find to useMemo for performance(AI suggestion)
+  const userMap: Record<string, User> = useMemo(
+    () => Object.fromEntries(users.map(u => [u.userName, u])),
+    [users]
+  );
 
   return (
     <div>
@@ -189,14 +131,21 @@ export default function CommentsComponent(props: { gameID: number }) {
       {error && <p>{error}</p>}
 
       <div className="commentsHolder">
-        {comments.length === 0 && !error && <p>No comments yet.</p>}
-
-        {comments.map((comment) => (
-          <div key={comment.commentID} className="comment">
-            <CommentContent comment={comment} users={users} />
-            {renderReplies(comment.children ?? [],users)}
-          </div>
-        ))}
+        {
+          comments.length === 0 && !error ? 
+          (
+            <p>No comments yet. Be the first to comment!</p>
+          ) : 
+          (
+            comments.map((comment) => 
+              (
+                <div key={comment._id} className="comment">
+                  <CommentContent comment={comment} users={userMap} gameID={props.gameID} />
+                  {renderReplies(comment.children ?? [], userMap)}
+                </div>
+              ))
+          )
+        }
       </div>
     </div>
   );

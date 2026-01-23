@@ -25,6 +25,7 @@ export default function NavBar() {
       .then((res) => res.json())
       .then((data: AuthStatus) => {
         setAuthStatus(data);
+        localStorage.setItem("userID", String(data.user?.ID ?? -1));
       })
       .catch((err) => console.error("Error fetching auth status:", err));
   }, []);
@@ -37,9 +38,6 @@ export default function NavBar() {
         </li>
         <li>
           <a href="/games">Games</a>
-        </li>
-        <li>
-          <a href="/TestPage">Test</a>
         </li>
       </ul>
 

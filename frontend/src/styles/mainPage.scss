@@ -70,21 +70,26 @@
 .commentBox{
 
     margin:1.5rem;
-    textarea{
-        width:90%;
-        height:60px;
-        border-radius:5px;
-        border:1px solid #ccc;
-        padding:5px;
-        font-size:1rem;
-        resize:none;
+    
+    form{
+        display: flex;
+        flex-direction: column;
+        width: 300px;
 
-        .hidden{
-            display:none;
+        .textInput{
+            height: 2rem;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
         }
-        .shown{
-            display:block;
-        }
+    }
+
+    &.hidden{
+        display:none;
+    }
+    &.shown{
+        display:block;
     }
 
     button{

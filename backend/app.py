@@ -4,7 +4,6 @@ from flask_cors import CORS
 
 import HelperFunctions.Database as db
 import HelperFunctions.Auth  as auth
-from HelperFunctions.Database import create_connection
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -18,10 +17,6 @@ CORS(app,resources={r"/*": {"origins": "http://localhost:4321"}},supports_creden
 app.secret_key = os.getenv("SECRET_KEY", "dev-secret-key")
 
 #================= API Routes ============================
-#Test route, returns message
-@app.route('/api/hello', methods=['GET'])
-def hello():
-    return jsonify({"message":" Hello and welcome to [Website]! "})
 
 #Returns Paginated list of games
 @app.route('/api/games/', methods=['GET'])
@@ -34,12 +29,12 @@ def games():
     if rows < 1:
         rows = 1
     
-    conn = create_connection()
-    cursor = conn.cursor()
-    cursor.execute("SELECT COUNT(*) FROM Games;")
-    total_items = cursor.fetchone()[0]
-    
+    conn = db.create_connection()
+    with conn.cursor() as cursor:  
+        cursor.execute("SELECT COUNT(*) FROM Games;")
+        total_items = cursor.fetchone()[0]
     conn.close()
+        
     games_list = db.getGamesByPage(pageNr,rows)
     total_pages = math.ceil(total_items / rows) if rows > 0 else 1
     
@@ -50,7 +45,7 @@ def games():
 
 @app.route('/api/games/<int:id>', methods=['GET'])
 def game(id):
-
+    #TODO: Move function to Database.py and call it here
     sql = """
         SELECT
         g.ID,
@@ -93,7 +88,7 @@ def game(id):
         WHERE g.ID = ?;
 
     """
-    conn = create_connection()
+    conn = db.create_connection()
     cursor = conn.cursor()
     cursor.execute(sql, (id,))
 
@@ -108,7 +103,6 @@ def game(id):
             "CommentsLink": row.CommentsLink,
             "Categories": row.Categories,
             "Consoles": row.Consoles,
-
 
             "ImageURLs": row.ImageURLs.split(', ') if row.ImageURLs else []
         }
@@ -138,7 +132,7 @@ def log_in():
         return jsonify({"error": "Invalid username or password"}), 401
     
     # Store in session
-    session['user_id'] = user["ID"]
+    session['user_id'] = user["MongoId"]
     session['username'] = user["Username"]
     session['is_admin'] = user.get("isAdmin", False)
 
@@ -152,12 +146,21 @@ def newAccount():
     
     response = auth.createAccount(username,passwordHash)
     
-    
-    if response==True:
+    if response[0]==True:
         return redirect('http://localhost:4321/login')
     else:
         return jsonify({"message": "Error", "username": response})
     
+@app.route('/auth/delete-account', methods=['POST'])
+def delete_account():
+    if 'user_id' in session:
+        user_id = session['user_id']
+        auth.deleteAccount(user_id)
+        db.deleteUser(user_id)
+        session.clear()
+        return jsonify({"message": "Account deleted successfully"}), 200
+    else:
+        return jsonify({"error": "Not authenticated"}), 401
 
 @app.route('/auth/logout', methods=['POST'])
 def log_out():
@@ -172,7 +175,7 @@ def auth_status():
             "user": {
                 "ID": session['user_id'],
                 "Username": session['username'],
-                "isAdmin": session.get('is_admin', False)
+                "isAdmin": session.get('is_admin')
             }
         }), 200
     else:
@@ -182,27 +185,52 @@ def auth_status():
 #Comments
 @app.route("/api/games/<int:gameID>/comments", methods=['GET','POST'])
 def comments(gameID):
+    # Only changing this function to use single return statement due to confusion with multiple return statements and status codes.
+    # Other functions can be changed later if needed. Priority Low.
+    status={}
+    code=0
+    
     if request.method == 'POST':
+        if session.get("user_id") is None:
+            status["error"]="Authentication required"
+            code=401
+            return jsonify(status),code 
         
-        db.setComment()
-        
-        return jsonify({"message": "Comment added successfully"}), 201
+         
+        commentData = {
+            "gameID": gameID,
+            "userID": session.get("user_id"),
+            "parentCommentID": request.json.get("parentCommentID"),
+            "commentText": request.json.get("commentText"),
+            "createdAt": request.json.get("createdAt")
+        }
+        db.addComment(commentData)
+        status["message"]="Comment added successfully"
+        code=201
 
     elif request.method == 'GET':  # GET request
             
         comments = db.getComments(gameID)
-        return jsonify({"comments": comments}), 200
+        if comments is None or len(comments) == 0:
+            status["error"]="No comments found"
+            code=404
+        status={"comments":comments}
+        code=200
     else:
-        return jsonify({"error": "Invalid request method"}), 405
+        status["error"]="Invalid request method"
+        code=405
+    
+    # New method of returning response with status code. Changed due to confusion with multiple return statements.
+    return jsonify(status),code 
 
 @app.route('/api/users', methods=['GET'])
 def get_users():
     users = db.getAllUsers()
     return jsonify({"users": users}), 200
 
-@app.route('/api/user/<int:userID>', methods=['GET'])
-def get_user(userID):
-    user = db.getUser(userID)
+@app.route('/api/user/<userId>', methods=['GET'])
+def get_user(userId):
+    user = db.getUser(userId)
     if not user:
         return jsonify({"error": "User not found"}), 404
     return jsonify(user), 200

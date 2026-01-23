@@ -1,12 +1,19 @@
 ---
 import Layout from '../layouts/Layout.astro';
 
-const response = await fetch("http://localhost:5000/api/hello");
-const data = await response.json();
+
+// Data Fetching Example
+//const response = await fetch("http://localhost:5000/api/hello");
+//const data = await response.json();
 ---
 
 <Layout>
 
+	<h1> Welcome to my Game Review Site! </h1>
+	<p> 
+		Here you can find reviews for a variety of games across different platforms and genres.
+		Feel free to browse through our collection, read user reviews, and share your own gaming experiences!
+	</p>
 
-	<h1>{data.message}</h1>
+	<!---<h1>{data.message}</h1>-->
 </Layout>
