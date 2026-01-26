@@ -2,7 +2,7 @@ Flask
 gunicorn
 waitress
 flask-cors
-pymssql
+pyodbc
 pymongo
 authlib
 python-dotenv

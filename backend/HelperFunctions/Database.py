@@ -1,18 +1,18 @@
 from datetime import datetime
-import os,pymssql
+import os,pyodbc
 
 from pymongo import MongoClient
 from bson import ObjectId
 
 
 def create_connection():
-    conn = pymssql.connect(
-    server=os.getenv("Server"),  # e.g., tcp://0.tcp.ngrok.io
-    user=os.getenv("UserID"),
-    password=os.getenv("Password"),
-    database=os.getenv("Database"),
-    port=int(os.getenv("MSSQL_PORT", 1433))
-    )
+    conn = pyodbc.connect(
+        "DRIVER={ODBC Driver 17 for SQL Server};"
+        f"SERVER={os.getenv('Server', 'localhost')};"
+        f"DATABASE={os.getenv('Database')};"
+        f"UID={os.getenv('UserID')};"
+        f"PWD={os.getenv('Password')};"
+        )
     return conn
 
 def getGamesByPage(page = 0, rows_per_page=10):    
