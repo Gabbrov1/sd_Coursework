@@ -7,11 +7,11 @@ from bson import ObjectId
 
 def create_connection():
     conn = pymssql.connect(
-    server=os.getenv["Server"],  # e.g., tcp://0.tcp.ngrok.io
-    user=os.getenv["UserID"],
-    password=os.getenv["Password"],
-    database=os.getenv["Database"],
-    port=int(os.getenv.get("MSSQL_PORT", 1433))
+    server=os.getenv("Server"),  # e.g., tcp://0.tcp.ngrok.io
+    user=os.getenv("UserID"),
+    password=os.getenv("Password"),
+    database=os.getenv("Database"),
+    port=int(os.getenv("MSSQL_PORT", 1433))
     )
     return conn
 

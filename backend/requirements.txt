@@ -7,4 +7,3 @@ pymongo
 authlib
 python-dotenv
 bcrypt
-requests
