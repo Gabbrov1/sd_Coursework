@@ -1,6 +1,5 @@
 Flask
 gunicorn
-waitress
 flask-cors
 pyodbc
 pymongo
