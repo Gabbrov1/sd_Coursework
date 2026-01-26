@@ -1,6 +1,8 @@
 import bcrypt
 from . import Database as db
 
+from authlib.integrations.flask_client import OAuth
+
 def checkDetails(username, password):
     conn = db.create_connection()
     sql = "SELECT Username, PassHash, isAdmin,MongoId FROM Users WHERE Username = ?"
@@ -98,3 +100,7 @@ def deleteAccount(username):
             print("Delete failed:", e)
             return False
         
+def googleGet():
+    pass
+def googleSet():
+    pass

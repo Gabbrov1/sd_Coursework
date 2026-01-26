@@ -155,44 +155,37 @@ def to_str(obj):
         return None
     else:
         return str(obj)
+    
+def to_objId(str):
+    if isinstance(str, dict):
+        return {k: to_objId(v) for k, v in str.items()}
+    elif isinstance(str, list):
+        return [to_objId(v) for v in str]
+    elif str is None:
+        return None
+    else:
+        return ObjectId(str)
 
 def buildCommentTree(comments):
-    """
-    Params:
-        Comments List
-    Outputs:
-        Tree of roots with expanding "Children" if there are any
-        
-        
-    """
-    
-    # convert ObjectId to string
+    comments = [to_str(comment) for comment in comments]
 
+    for comment in comments:
+        comment["children"] = []
 
-    comments = [to_str(c) for c in comments]
-
-    # add children array
-    for c in comments:
-        c["children"] = []
-
-    nodes = {c["_id"]: c for c in comments}
+    nodes_by_id = {comment["_id"]: comment for comment in comments}
     roots = []
 
-    
-
-    for node in nodes.values():
-        parent_id = node.get("parentID")  # get the parentID
+    for comment in nodes_by_id.values():
+        parent_id = comment.get("parentCommentID")
 
         if parent_id is None:
-            # Root comment
-            roots.append(node)
+            roots.append(comment)
+            continue
+
+        parent = nodes_by_id.get(parent_id)
+        if parent:
+            parent["children"].append(comment)
         else:
-            # Find the parent node
-            parent = nodes.get(parent_id)
-            if parent:
-                parent["children"].append(node)
-            else:
-                # Parent not found, treat as root
-                roots.append(node)
-                
+            roots.append(comment)
+
     return roots

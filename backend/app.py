@@ -1,6 +1,7 @@
 import math,os
 from flask import Flask, request, jsonify, redirect, session
 from flask_cors import CORS
+import bson
 
 import HelperFunctions.Database as db
 import HelperFunctions.Auth  as auth
@@ -199,7 +200,7 @@ def comments(gameID):
          
         commentData = {
             "gameID": gameID,
-            "userID": session.get("user_id"),
+            "userID": db.to_objId(session.get("user_id")),
             "parentCommentID": request.json.get("parentCommentID"),
             "commentText": request.json.get("commentText"),
             "createdAt": request.json.get("createdAt")

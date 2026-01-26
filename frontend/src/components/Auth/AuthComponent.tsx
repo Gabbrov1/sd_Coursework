@@ -1,4 +1,5 @@
 import { useState } from "react";
+import GoogleSignIn from "./googleSignIn"
 import '../../styles/login.scss'
 
 export default function AuthComponent() {
@@ -95,6 +96,8 @@ export default function AuthComponent() {
                                     />
                                 </>
                             )}
+
+                            <></>
                         </div>
 
                         {error && (
@@ -105,6 +108,7 @@ export default function AuthComponent() {
                             {stateRegister ? "Register" : "Sign In"}
                         </button>
                     </form>
+                    <GoogleSignIn/>
                 </div>
             </div>
         </div>

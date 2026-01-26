@@ -61,7 +61,7 @@ function CommentContent({ comment, users, gameID }: { comment: Comment; users: R
 
 // ---------- Recursive replies ----------
 
-function renderReplies(replies: Comment[], users: Record<string, User>): any | null {
+function renderReplies(replies: Comment[], users: Record<string, User>,gameID:number): any | null {
   if (!replies || replies.length === 0) {
     return null;
   }
@@ -71,8 +71,8 @@ function renderReplies(replies: Comment[], users: Record<string, User>): any | n
       {replies.map((reply) => (
         <div key={reply._id} className="reply">
           <div className="comment">
-            <CommentContent comment={reply} users={users} gameID={props.gameID}/>
-            {renderReplies(reply.children ?? [], users)}
+            <CommentContent comment={reply} users={users} gameID={gameID}/>
+            {renderReplies(reply.children ?? [], users,gameID)}
           </div>
         </div>
       ))}
@@ -141,7 +141,7 @@ export default function CommentsComponent(props: { gameID: number }) {
               (
                 <div key={comment._id} className="comment">
                   <CommentContent comment={comment} users={userMap} gameID={props.gameID} />
-                  {renderReplies(comment.children ?? [], userMap)}
+                  {renderReplies(comment.children ?? [], userMap,props.gameID)}
                 </div>
               ))
           )
