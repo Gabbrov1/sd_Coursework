@@ -1,11 +1,11 @@
 import bcrypt
 from . import Database as db
 
-from authlib.integrations.flask_client import OAuth
+
 
 def checkDetails(username, password):
     conn = db.create_connection()
-    sql = "SELECT Username, PassHash, isAdmin,MongoId FROM Users WHERE Username = ?"
+    sql = "SELECT Username, PassHash, isAdmin,MongoId FROM Users WHERE Username = %s"
     
     with conn.cursor() as cursor:    
         cursor.execute(sql, (username,))
@@ -29,9 +29,9 @@ def checkDetails(username, password):
 def setPassword(username,oldPass,newPass):
     sql = """
                 UPDATE Users
-                SET PasswordHash = ? 
-                WHERE Username = ?
-                AND PassHash = ?;
+                SET PasswordHash = %s 
+                WHERE Username = %s
+                AND PassHash = %s;
             """
     conn = db.create_connection()
     with conn.cursor() as cursor:  
@@ -49,7 +49,7 @@ def createAccount(username,password):
         
         try:
             cursor.execute(
-                "INSERT INTO Users (Username, PassHash, MongoId) OUTPUT INSERTED.ID VALUES (?, ?, ?)",
+                "INSERT INTO Users (Username, PassHash, MongoId) OUTPUT INSERTED.ID VALUES (%s, %s, %s)",
                 (username, hashed.decode())
             )
             conn.commit()
@@ -75,7 +75,7 @@ def addMongoID(user_id, mongo_id):
     with conn.cursor() as cursor:  
         try:
             cursor.execute(
-                "UPDATE Users SET MongoId = ? WHERE ID = ?",
+                "UPDATE Users SET MongoId = %s WHERE ID = %s",
                 (str(mongo_id), user_id)
             )
             conn.commit()
@@ -90,7 +90,7 @@ def deleteAccount(username):
     with conn.cursor() as cursor:  
         try:
             cursor.execute(
-                "DELETE FROM Users WHERE userName = ?",
+                "DELETE FROM Users WHERE userName = %s",
                 (username,)
             )
             conn.commit()

@@ -1,11 +1,11 @@
-import math,os
-from flask import Flask, request, jsonify, redirect, session
-from flask_cors import CORS
-import bson
-
+import math, os, bson
 import HelperFunctions.Database as db
 import HelperFunctions.Auth  as auth
 
+
+from flask import Flask, request, jsonify, redirect, session,url_for
+from flask_cors import CORS
+from authlib.integrations.flask_client import OAuth
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -15,7 +15,21 @@ app = Flask(__name__)
 CORS(app,resources={r"/*": {"origins": "http://localhost:4321"}},supports_credentials=True)
 
 # Set a secret key for session management
-app.secret_key = os.getenv("SECRET_KEY", "dev-secret-key")
+app.secret_key = os.getenv("SECRET_KEY")
+
+oauth = OAuth(app)
+
+google = oauth.register(
+    name="google",
+    client_id="GOOGLE_CLIENT_ID",
+    client_secret="GOOGLE_CLIENT_SECRET",
+    access_token_url="https://oauth2.googleapis.com/token",
+    authorize_url="https://accounts.google.com/o/oauth2/auth",
+    api_base_url="https://www.googleapis.com/oauth2/v2/",
+    client_kwargs={
+        "scope": "openid email profile"
+    }
+)
 
 #================= API Routes ============================
 
@@ -86,7 +100,7 @@ def game(id):
             WHERE ga.GameID = g.ID
             ORDER BY ga.ID
         ) AS GA
-        WHERE g.ID = ?;
+        WHERE g.ID = %s;
 
     """
     conn = db.create_connection()
@@ -201,7 +215,7 @@ def comments(gameID):
         commentData = {
             "gameID": gameID,
             "userID": db.to_objId(session.get("user_id")),
-            "parentCommentID": request.json.get("parentCommentID"),
+            "parentCommentID": db.to_objId(request.json.get("parentCommentID")),
             "commentText": request.json.get("commentText"),
             "createdAt": request.json.get("createdAt")
         }

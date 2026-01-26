@@ -1,17 +1,17 @@
 from datetime import datetime
-import os,pyodbc
+import os,pymssql
 
 from pymongo import MongoClient
 from bson import ObjectId
 
 
 def create_connection():
-    conn = pyodbc.connect(
-        "DRIVER={ODBC Driver 17 for SQL Server};"
-        f"SERVER={os.getenv('Server', 'localhost')};"
-        f"DATABASE={os.getenv('Database')};"
-        f"UID={os.getenv('UserID')};"
-        f"PWD={os.getenv('Password')};",
+    conn = pymssql.connect(
+    server=os.getenv["Server"],  # e.g., tcp://0.tcp.ngrok.io
+    user=os.getenv["UserID"],
+    password=os.getenv["Password"],
+    database=os.getenv["Database"],
+    port=int(os.getenv.get("MSSQL_PORT", 1433))
     )
     return conn
 
@@ -68,12 +68,12 @@ def getGamesByPage(page = 0, rows_per_page=10):
 
 #NoSQL changed from Firestore to Mongo DB due to cost.
 
-client = MongoClient("mongodb://localhost:27017")
-db = client["SysDevComments"]  
+client = MongoClient(f"{os.getenv('MongoServer','mongodb://localhost:27017')}")
+MongoDb = client[f"{os.getenv('MongoDb','SysDevComments')}"]  
 
-usersCol = db["users"]
-gamesCol = db["games"]
-commentsCol = db["comments"]
+usersCol = MongoDb["users"]
+gamesCol = MongoDb["games"]
+commentsCol = MongoDb["comments"]
 
 
 def getGames(gameID):
