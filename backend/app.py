@@ -47,8 +47,8 @@ def games():
     
     conn = db.create_connection()
     with conn.cursor() as cursor:  
-        cursor.execute("SELECT COUNT(*) FROM Games;")
-        total_items = cursor.fetchone()[0]
+        cursor.execute("SELECT COUNT(*) as Total FROM Games;")
+        total_items = cursor.fetchone()["Total"]
     conn.close()
         
     games_list = db.getGamesByPage(pageNr,rows)
@@ -111,16 +111,16 @@ def game(id):
     row = cursor.fetchone()
     if row:
         game = {
-            "ID": row.ID,
-            "Title": row.Title,
-            "Description": row.Description,
-            "ArticleBody": row.ArticleBody,
+            "ID": row["ID"],
+            "Title": row["Title"],
+            "Description": row["Description"],
+            "ArticleBody": row["ArticleBody"],
 
-            "CommentsLink": row.CommentsLink,
-            "Categories": row.Categories,
-            "Consoles": row.Consoles,
+            "CommentsLink": row["CommentsLink"],
+            "Categories": row["Categories"],
+            "Consoles": row["Consoles"],
 
-            "ImageURLs": row.ImageURLs.split(', ') if row.ImageURLs else []
+            "ImageURLs": row["ImageURLs"].split(', ') if row["ImageURLs"] else []
         }
     
     else:

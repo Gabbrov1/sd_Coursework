@@ -1,18 +1,19 @@
 from datetime import datetime
-import os,pyodbc
+import os,pymssql
 
 from pymongo import MongoClient
 from bson import ObjectId
 
 
 def create_connection():
-    conn = pyodbc.connect(
-        "DRIVER={ODBC Driver 17 for SQL Server};"
-        f"SERVER={os.getenv('Server', 'localhost')};"
-        f"DATABASE={os.getenv('Database')};"
-        f"UID={os.getenv('UserID')};"
-        f"PWD={os.getenv('Password')};"
-        )
+    conn = pymssql.connect(
+        server=os.getenv("Server"),  # e.g., tcp://0.tcp.ngrok.io
+        user=os.getenv("UserID"),
+        password=os.getenv("Password"),
+        database=os.getenv("Database"),
+        port=int(os.getenv("MSSQL_PORT", 1433)),
+        as_dict=True
+    )
     return conn
 
 def getGamesByPage(page = 0, rows_per_page=10):    
@@ -53,12 +54,12 @@ def getGamesByPage(page = 0, rows_per_page=10):
         games_list = []
         for row in cursor.fetchall():
             game = {
-                "ID": row.ID,
-                "Title": row.GameName,
-                "Description": row.GameDescription,
-                "Categories": row.Categories,
-                "Consoles": row.Consoles,
-                "Images": row.ImageURLs.split(', ') if row.ImageURLs else []
+                "ID": row["ID"],
+                "Title": row["GameName"],
+                "Description": row["GameDescription"],
+                "Categories": row["Categories"],
+                "Consoles": row["Consoles"],
+                "Images": row["ImageURLs"].split(', ') if row["ImageURLs"] else []
             }
             games_list.append(game)
 

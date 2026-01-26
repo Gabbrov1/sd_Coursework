@@ -1,7 +1,7 @@
 Flask
 gunicorn
 flask-cors
-pyodbc
+pymssql
 pymongo
 authlib
 python-dotenv

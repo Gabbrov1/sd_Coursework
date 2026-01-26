@@ -14,14 +14,14 @@ def checkDetails(username, password):
         if not row:
             return False
 
-        stored_hash = row.PassHash.encode("utf-8")
+        stored_hash = row["PassHash"].encode("utf-8")
         entered_pw = password.encode("utf-8")
 
     if bcrypt.checkpw(entered_pw, stored_hash):
         return {
-            "MongoId": row.MongoId,
-            "Username": row.Username,
-            "isAdmin": row.isAdmin
+            "MongoId": row["MongoId"],
+            "Username": row["Username"],
+            "isAdmin": row["isAdmin"]
         }
     else:
         return False
