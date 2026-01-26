@@ -1,0 +1,13 @@
+Flask
+gunicorn
+waitress
+flask-cors
+pyodbc
+pymongo
+authlib
+python-dotenv
+
+math
+os
+bson
+bcrypt
