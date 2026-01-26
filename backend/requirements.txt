@@ -6,6 +6,4 @@ pyodbc
 pymongo
 authlib
 python-dotenv
-os
-bson
 bcrypt
