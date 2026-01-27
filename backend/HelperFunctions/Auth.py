@@ -118,7 +118,7 @@ def googleLogin(googleId, email):
                 return cursor.execute("SELECT * FROM Users WHERE GoogleId = %s", (googleId,))
             
             # No user%s create new
-            cursor.execute("INSERT INTO Users (Username,Email, GoogleId) VALUES (%s, %s, %s)", (email.split('@')[0], email, googleId))
+            cursor.execute("INSERT INTO Users (Username,Email, PassHash,GoogleId) VALUES (%s, %s, %s, %s)", (email.split('@')[0], email, googleId, googleId))
             return cursor.execute("SELECT * FROM Users WHERE GoogleId = %s", (googleId,))
 
         except Exception as e:
