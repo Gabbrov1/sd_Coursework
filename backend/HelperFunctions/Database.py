@@ -143,9 +143,12 @@ def deleteUser(userID: int):
         return False
 
 def getAllUsers():
-    cursor = usersCol.find({}, {"_id": 0})
+    users = []
+    for user in usersCol.find({}):
+        user["_id"] = str(user["_id"])  # convert ObjectId to string
+        users.append(user)
 
-    users = list(cursor)
+    users = list(users)
     return users
 
 

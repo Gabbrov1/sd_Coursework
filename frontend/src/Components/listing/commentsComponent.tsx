@@ -48,9 +48,11 @@ function CommentContent({ comment, users, gameID }: { comment: Comment; users: R
   
   return (
     <>
-      <p className="userTag" style={{background: users[comment.userName]?.customBackground ?? ''}}>
-        <span className="userAvatar" style={{background: `url(${users[comment.userName]?.avatarImage? users[comment.userName].avatarImage:''})`}}/>
-        <strong key={comment.userID}>{comment.userName}</strong>
+      <p className="userTag" style={{ background: users[comment.userID.toString()]?.customBackground ?? '' }}>
+        <span className="userAvatar" style={{background: `url(${users[comment.userID.toString()]?.avatarImage ?? ''})`,}}/>
+        <strong key={comment.userID.toString()}>
+          {users[comment.userID.toString()]?.userName ?? 'Unknown User'}
+        </strong>
         <span className="timeStamp">{getTimestamp(comment.createdAt)}</span>
       </p>
       <p>{comment.commentText}</p>
@@ -120,8 +122,8 @@ export default function CommentsComponent(props: { gameID: number }) {
   // Memoized user lookup map
   //Changed from find to useMemo for performance(AI suggestion)
   const userMap: Record<string, User> = useMemo(
-    () => Object.fromEntries(users.map(u => [u.userName, u])),
-    [users]
+  () => Object.fromEntries(users.map(u => [u._id, u])),
+  [users]
   );
 
   return (

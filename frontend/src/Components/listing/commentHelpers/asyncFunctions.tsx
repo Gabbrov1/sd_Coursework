@@ -1,4 +1,4 @@
-import type { Comment, User } from "./customTypes";
+import type { Comment, User, GetUsersResponse } from "./customTypes";
 import getEnvironment from '../../envComponent';
 
 const apiUrl = getEnvironment();
@@ -51,6 +51,6 @@ export async function getUsers(): Promise<User[]> {
   if (!res.ok) {
     throw new Error(`Failed to fetch user: ${res.status}`);
   }
-  const data: getUsersResponse = await res.json();
+  const data: GetUsersResponse = await res.json();
   return data.users;
 }

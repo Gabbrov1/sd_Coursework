@@ -183,7 +183,7 @@ def delete_account():
 
 @app.route('/auth/logout', methods=['POST'])
 def log_out():
-    session.clear()
+    session.pop("user", None)
     return redirect('/')
 
 @app.route('/auth/status', methods=['GET'])
@@ -199,6 +199,27 @@ def auth_status():
         }), 200
     else:
         return jsonify({"logged_in": False}), 200
+    
+@app.route('/auth/google', methods=['GET'])
+def google_login():
+    redirect_uri = url_for('google_authorize', _external=True)
+    return google.authorize_redirect(redirect_uri)
+
+@app.route("/auth/google/callback")
+def google_callback():
+    token = google.authorize_access_token()  # fetch token from Google
+    resp = google.get("userinfo")  # fetch user info
+    user_info = resp.json()
+
+    # Store in session
+    session["user"] = {
+        "id": user_info["id"],
+        "email": user_info["email"],
+        "name": user_info["name"],
+    }
+
+    return jsonify({"message": "Logged in with Google", "user": user_info})
+
 
 #===============================================
 #Comments

@@ -4,19 +4,18 @@ export interface Comment {
   parentID: string | null;
 
   createdAt: string;
-  userName: string;
-  userID: number;
+  userID: string;
   commentText: string;
   children?: Comment[];
 }
 export interface User {
-  userID: number;
+  userID: string;
   userName: string;
   avatarImage: string;
   quote: string;
   customBackground: string;
 }
 
-type getUsersResponse = {
+export type GetUsersResponse = {
   users: User[];
 }
