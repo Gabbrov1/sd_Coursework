@@ -17,14 +17,13 @@ CORS(
     resources={r"/*": {"origins": [r"https://.*\.pages\.dev", "http://localhost:4321"]}},
     supports_credentials=True
 )
+app.config['SESSION_COOKIE_SECURE'] = True  # only if using HTTPS
+app.config['SESSION_COOKIE_SAMESITE'] = "Lax"  # allows redirect from OAuth flow
 
 # Set a secret key for session management
 app.secret_key = os.getenv("SECRET_KEY","dev-secret-key")
 
-app.config.update(
-    SESSION_COOKIE_SECURE=True,
-    SESSION_COOKIE_SAMESITE="None",
-)
+
 
 oauth = OAuth(app)
 
