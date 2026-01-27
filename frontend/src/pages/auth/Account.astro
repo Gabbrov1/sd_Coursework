@@ -1,7 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import '../../styles/account.scss';
-const apiUrl = import.meta.env.PUBLIC_API_ROOT;
 ---
 
 <head>
@@ -15,8 +14,8 @@ const apiUrl = import.meta.env.PUBLIC_API_ROOT;
   </div>
   
 
-  <script>
-    
+  <script type="module">
+    const apiUrl = import.meta.env.PUBLIC_API_ROOT;
   (async () => {
     let userStatResponse;
     try {

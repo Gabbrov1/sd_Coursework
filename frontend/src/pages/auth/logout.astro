@@ -7,7 +7,7 @@ if (Astro.request.method === 'POST') {
     Astro.response.headers.append('Set-Cookie', 'auth=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 UTC;');
     return Astro.redirect('/');
 }
-const apiRoot = import.meta.env.API_ROOT;
+const apiRoot = import.meta.env.PUBLIC_API_ROOT;
 ---
 
 <Layout title="Logout">
