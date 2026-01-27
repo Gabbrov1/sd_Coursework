@@ -14,7 +14,7 @@ app = Flask(__name__)
 # Enable Cross-Origin Resource Sharing (CORS) for the specified origin
 CORS(
     app,
-    resources={r"/*": {"origins": ["https://*.pages.dev", "http://localhost:4321"]}},
+    resources={r"/*": {"origins": [r"https://.*\.pages\.dev", "http://localhost:4321"]}},
     supports_credentials=True
 )
 
