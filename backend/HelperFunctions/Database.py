@@ -69,7 +69,10 @@ def getGamesByPage(page = 0, rows_per_page=10):
 
 #NoSQL changed from Firestore to Mongo DB due to cost.
 
-client = MongoClient(f"{os.getenv('MongoServer','mongodb://localhost')}:{os.getenv('MongoPort','27017')}")
+client = MongoClient(
+    host= os.getenv('MongoServer','mongodb://localhost'),
+    port= int(os.getenv('MongoPort','27017'))
+    )
 MongoDb = client[f"{os.getenv('MongoDb','SysDevComments')}"]  
 
 usersCol = MongoDb["users"]
