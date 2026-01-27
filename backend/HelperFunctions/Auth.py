@@ -28,11 +28,11 @@ def checkDetails(username, password):
 
 def setPassword(username,oldPass,newPass):
     sql = """
-                UPDATE Users
-                SET PasswordHash = %s 
-                WHERE Username = %s
-                AND PassHash = %s;
-            """
+            UPDATE Users
+            SET PasswordHash = %s 
+            WHERE Username = %s
+            AND PassHash = %s;
+        """
     conn = db.create_connection()
     with conn.cursor() as cursor:  
          

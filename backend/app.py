@@ -21,6 +21,10 @@ CORS(
 # Set a secret key for session management
 app.secret_key = os.getenv("SECRET_KEY")
 
+app.config.update(
+    SESSION_COOKIE_SAMESITE="None",
+    SESSION_COOKIE_SECURE=True,
+)
 oauth = OAuth(app)
 
 google = oauth.register(
@@ -216,6 +220,7 @@ def google_callback():
         "id": user_info["id"],
         "email": user_info["email"],
         "name": user_info["name"],
+        "picture": user_info["picture"]
     }
 
     return jsonify({"message": "Logged in with Google", "user": user_info})
