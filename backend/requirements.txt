@@ -1,6 +1,7 @@
 Flask
 gunicorn
 flask-cors
+requests
 pymssql
 pymongo
 authlib
