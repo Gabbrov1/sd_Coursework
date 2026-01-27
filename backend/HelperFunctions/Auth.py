@@ -7,6 +7,7 @@ def checkDetails(username, password):
     conn = db.create_connection()
     sql = "SELECT Username, PassHash, isAdmin,MongoId FROM Users WHERE Username = %s"
     
+    username = username.strip()
     with conn.cursor() as cursor:    
         cursor.execute(sql, (username,))
         row = cursor.fetchone()
@@ -100,7 +101,44 @@ def deleteAccount(username):
             print("Delete failed:", e)
             return False
         
-def googleGet():
-    pass
-def googleSet():
-    pass
+def googleLogin(googleId, email):
+    conn = db.create_connection()
+    with conn.cursor() as cursor:  
+        try:
+            cursor.execute(
+                "SELECT MongoId, Username, isAdmin FROM Users WHERE GoogleId = %s",
+                (googleId,)
+            )
+            row = cursor.fetchone()
+            if row:
+                return {
+                    "MongoId": row["MongoId"],
+                    "Username": row["Username"],
+                    "isAdmin": row["isAdmin"]
+                }
+            else:
+                cursor.execute(
+                    "INSERT INTO Users (Username, PassHash, GoogleId) OUTPUT INSERTED.ID VALUES (%s, %s, %s)",
+                    (email, '', googleId)
+                )
+                conn.commit()
+                userID = cursor.fetchone()["ID"]
+                userDetails = {
+                    "userName": email,
+                    "quote":"",
+                    "avatarImage":"",
+                    "customBackground":"linear-gradient(to top, #ffffff 0%, #000000 100%)"
+                }
+                
+                mongo_result = db.addUser(userDetails)
+                
+                addMongoID(userID, mongo_result)
+                return {
+                    "MongoId": str(mongo_result),
+                    "Username": email,
+                    "isAdmin": False
+                }
+
+        except Exception as e:
+            print("Google login failed:", e)
+            return None

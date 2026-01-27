@@ -95,3 +95,6 @@ ALTER ROLE db_datawriter ADD MEMBER [' + @username + '];';
 EXEC(@sql);
 
 ALTER TABLE Users ADD MongoId VARCHAR(24);
+
+ALTER TABLE dbo.Users
+ADD GoogleId NVARCHAR(255) NULL;

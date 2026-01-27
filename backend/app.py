@@ -206,7 +206,7 @@ def auth_status():
     
 @app.route('/auth/google', methods=['GET'])
 def google_login():
-    redirect_uri = url_for('google_authorize', _external=True)
+    redirect_uri = google.get('google_authorize', _external=True)
     return google.authorize_redirect(redirect_uri)
 
 @app.route("/auth/google/callback")
@@ -215,8 +215,6 @@ def google_callback():
     response = google.get("userinfo")  # fetch user info
     user_info = response.json()
 
-
-    
     # Store in session
     session["user"] = {
         "id": user_info["id"],
@@ -227,7 +225,27 @@ def google_callback():
 
     return jsonify({"message": "Logged in with Google", "user": user_info})
 
-
+@app.route("/auth/google/authorize")
+def google_authorize():
+    token = google.authorize_access_token()
+    resp = google.get("userinfo")
+    user_info = resp.json()
+    
+    googleLogin = auth.googleLogin(user_info["id"],user_info["email"])
+    if googleLogin is None:
+        return jsonify({"error": "Google login failed"}), 401
+    
+    
+    
+    session["user"] = {
+        "id": googleLogin.get("MongoId"),
+        "email": user_info["email"],
+        "name": user_info["name"],
+        "picture": user_info["picture"],
+        "username": googleLogin.get("Username")
+    }
+    
+    return f"Hello {user_info['email']}"
 #===============================================
 #Comments
 @app.route("/api/games/<int:gameID>/comments", methods=['GET','POST'])
