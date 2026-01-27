@@ -19,7 +19,7 @@ CORS(
 )
 
 # Set a secret key for session management
-app.secret_key = os.getenv("SECRET_KEY")
+app.secret_key = os.getenv("SECRET_KEY","dev-secret-key")
 
 app.config.update(
     SESSION_COOKIE_SECURE=True,
