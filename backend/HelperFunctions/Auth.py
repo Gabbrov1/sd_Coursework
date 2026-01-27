@@ -106,20 +106,20 @@ def googleLogin(googleId, email):
     with conn.cursor() as cursor:  
         try:
             # Try find user by Google ID
-            user = conn.query("SELECT * FROM Users WHERE GoogleId = ?", (googleId,))
+            user = cursor.execute("SELECT * FROM Users WHERE GoogleId = ?", (googleId,))
             if user:
                 return user
             
             # No Google ID? Try matching email
-            user = conn.query("SELECT * FROM Users WHERE Email = ?", (email,))
+            user = cursor.execute("SELECT * FROM Users WHERE Email = ?", (email,))
             if user:
                 # Link account
-                db.execute("UPDATE Users SET GoogleId = ? WHERE Email = ?", (googleId, email))
-                return db.query("SELECT * FROM Users WHERE GoogleId = ?", (googleId,))
+                cursor.execute("UPDATE Users SET GoogleId = ? WHERE Email = ?", (googleId, email))
+                return cursor.execute("SELECT * FROM Users WHERE GoogleId = ?", (googleId,))
             
             # No user? create new
-            new_user_id = db.execute("INSERT INTO Users (Email, GoogleId) VALUES (?, ?)", (email, googleId))
-            return db.query("SELECT * FROM Users WHERE GoogleId = ?", (googleId,))
+            cursor.execute("INSERT INTO Users (Email, GoogleId) VALUES (?, ?)", (email, googleId))
+            return cursor.execute("SELECT * FROM Users WHERE GoogleId = ?", (googleId,))
 
         except Exception as e:
             print("Google login failed:", e)
