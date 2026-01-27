@@ -41,6 +41,10 @@ google = oauth.register(
 
 #================= API Routes ============================
 
+@app.route('/health', methods=['GET'])
+def health_check():
+    return jsonify({"status": "OK"}), 200
+
 #Returns Paginated list of games
 @app.route('/api/games/', methods=['GET'])
 def games():
@@ -229,7 +233,7 @@ def google_authorize():
         "username": googleLogin.get("Username")
     }
     
-    return f"Hello {user_info['email']}"
+    return jsonify({"message": "Login successful", "user": session["user"]}), 200
 #===============================================
 #Comments
 @app.route("/api/games/<int:gameID>/comments", methods=['GET','POST'])
