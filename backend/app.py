@@ -223,9 +223,9 @@ def google_authorize():
     
     session["user"] = {
         "id": googleLogin.get("MongoId"),
-        "email": user_info["email"],
-        "name": user_info["name"],
-        "picture": user_info["picture"],
+        "email": user_info.get("email"),
+        "name": user_info.get("name"),
+        "picture": user_info.get("picture"),
         "username": googleLogin.get("Username")
     }
     
