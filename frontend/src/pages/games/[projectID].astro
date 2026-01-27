@@ -27,7 +27,7 @@ const game = await fetch(`${apiRoot}/api/games/${projectID}`).then(r => r.json()
 
 <Layout>
   <div class="articleContent">
-    <h1> Title: {game.Title}</h1>
+    <h1>{game.Title}</h1>
 
     <p> Description: {game.Description}</p>
     <div>

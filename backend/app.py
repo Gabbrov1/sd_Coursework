@@ -170,7 +170,7 @@ def newAccount():
     response = auth.createAccount(username,passwordHash)
     
     if response[0]==True:
-        return redirect('/login')
+        return redirect(url_for('log_in'), code=307)  # Use 307 to preserve the POST method
     else:
         return jsonify({"message": "Error", "username": response})
     
@@ -212,9 +212,11 @@ def google_login():
 @app.route("/auth/google/callback")
 def google_callback():
     token = google.authorize_access_token()  # fetch token from Google
-    resp = google.get("userinfo")  # fetch user info
-    user_info = resp.json()
+    response = google.get("userinfo")  # fetch user info
+    user_info = response.json()
 
+
+    
     # Store in session
     session["user"] = {
         "id": user_info["id"],
