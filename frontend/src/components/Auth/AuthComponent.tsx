@@ -1,6 +1,9 @@
 import { useState } from "react";
 import GoogleSignIn from "./googleSignIn"
+import getEnvironment from '../envComponent';
 import '../../styles/login.scss'
+
+const apiUrl = getEnvironment();
 
 export default function AuthComponent() {
     const [stateRegister, setStateRegister] = useState(false);
@@ -26,8 +29,8 @@ export default function AuthComponent() {
         const formData = new FormData(form);
 
         const url = stateRegister
-            ? "http://localhost:5000/auth/register"
-            : "http://localhost:5000/auth/login";
+            ? `${apiUrl}/auth/register`
+            : `${apiUrl}/auth/login`;
 
         try {
             const res = await fetch(url, {

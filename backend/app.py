@@ -163,7 +163,7 @@ def newAccount():
     response = auth.createAccount(username,passwordHash)
     
     if response[0]==True:
-        return redirect('http://localhost:4321/login')
+        return redirect('/login')
     else:
         return jsonify({"message": "Error", "username": response})
     
@@ -181,7 +181,7 @@ def delete_account():
 @app.route('/auth/logout', methods=['POST'])
 def log_out():
     session.clear()
-    return redirect('http://localhost:4321/')
+    return redirect('/')
 
 @app.route('/auth/status', methods=['GET'])
 def auth_status():

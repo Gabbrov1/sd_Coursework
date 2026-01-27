@@ -4,6 +4,7 @@ import Comments from "../../Components/listing/commentsComponent";
 import CommentActions from "../../Components/listing/commentHelpers/commentFunctions";
 import '../../styles/mainPage.scss';
 
+const apiRoot = import.meta.env.API_ROOT;
 
 interface GameArticle {
   ID: number;
@@ -16,7 +17,7 @@ interface GameArticle {
   ImageURLs: string[];
 }
 const { projectID } = Astro.params;
-const game = await fetch(`http://localhost:5000/api/games/${projectID}`).then(r => r.json() as Promise<GameArticle>);
+const game = await fetch(`${apiRoot}/api/games/${projectID}`).then(r => r.json() as Promise<GameArticle>);
 ---
 
 <head>

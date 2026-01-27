@@ -3,8 +3,9 @@ import Layout from '../layouts/Layout.astro';
 
 
 // Data Fetching Example
-//const response = await fetch("http://localhost:5000/api/hello");
-//const data = await response.json();
+const apiRoot =import.meta.env.API_ROOT
+const response = await fetch(`${apiRoot}/api/hello`);
+const data = await response.json();
 ---
 
 <Layout>

@@ -1,6 +1,9 @@
 import { number } from "astro:schema";
 import { useEffect, useState } from "react";
 import ImageCarousel from "./imageCarousel";
+import getEnvironment from '../envComponent';
+
+const apiUrl = getEnvironment();
 
 export interface Game {
   ID: number;
@@ -21,9 +24,9 @@ export default function GameList() {
   const [games, setGames] = useState<Game[]>([]);
   const [pageNumber, SetPageNumber] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
-  
+
   function loadGames(page: number, rows: number) {
-    return fetch(`http://localhost:5000/api/games?pageNr=${page}&rows=${rows}`)
+    return fetch(`${apiUrl}/api/games?pageNr=${page}&rows=${rows}`)
       .then(res => res.json());
   }
 

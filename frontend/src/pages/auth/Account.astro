@@ -1,6 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import '../../styles/account.scss';
+const apiUrl = import.meta.env.PUBLIC_API_ROOT;
 ---
 
 <head>
@@ -15,11 +16,11 @@ import '../../styles/account.scss';
   
 
   <script>
+    
   (async () => {
     let userStatResponse;
-
     try {
-      const userStat = await fetch("http://localhost:5000/auth/status", {
+      const userStat = await fetch(`${apiUrl}/auth/status`, {
         method: "GET",
         credentials: "include",
       });
@@ -39,7 +40,7 @@ import '../../styles/account.scss';
       const userID = userStatResponse.user?.ID;
 
       const userDets = await fetch(
-        `http://localhost:5000/api/user/${userID}`,
+        `${apiUrl}/api/user/${userID}`,
         {
           method: "GET"
         }

@@ -7,6 +7,7 @@ if (Astro.request.method === 'POST') {
     Astro.response.headers.append('Set-Cookie', 'auth=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 UTC;');
     return Astro.redirect('/');
 }
+const apiRoot = import.meta.env.API_ROOT;
 ---
 
 <Layout title="Logout">
@@ -14,7 +15,7 @@ if (Astro.request.method === 'POST') {
     <h1>Logout</h1>
     <p>Are you sure you want to logout?</p>
 
-    <form action="http://localhost:5000/auth/logout" method="POST">
+    <form action=`${apiRoot}/auth/logout` method="POST">
         <button class="btn-logout">Confirm Logout</button>
         <a href="/" class="btn-cancel">Cancel</a>
     </form>

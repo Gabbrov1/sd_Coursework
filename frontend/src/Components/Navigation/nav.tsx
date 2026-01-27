@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 import '../../styles/navbar.scss';
+import getEnvironment from '../envComponent';
+
+const apiUrl = getEnvironment();
 
 type User = {
   ID: number;
@@ -18,7 +21,7 @@ export default function NavBar() {
   });
 
   useEffect(() => {
-    fetch("http://localhost:5000/auth/status", {
+    fetch(`${apiUrl}/auth/status`, {
       method: "GET",
       credentials: "include",
     })

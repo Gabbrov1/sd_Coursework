@@ -1,8 +1,11 @@
 import type { Comment, User } from "./customTypes";
+import getEnvironment from '../../envComponent';
+
+const apiUrl = getEnvironment();
 
 export async function addComment(gameID: number, parentID: string | null,commentText: string): Promise<boolean> {
   const res = await fetch(
-    `http://localhost:5000/api/games/${gameID}/comments`,
+    `${apiUrl}/api/games/${gameID}/comments`,
     { 
       method: "POST",
       headers: {
@@ -22,7 +25,7 @@ export async function addComment(gameID: number, parentID: string | null,comment
 
 export async function getComments(gameID: number): Promise<Comment[]> {
   const res = await fetch(
-    `http://localhost:5000/api/games/${gameID}/comments`,
+    `${apiUrl}/api/games/${gameID}/comments`,
     { 
       method: "GET",
       credentials: "include"
@@ -39,7 +42,7 @@ export async function getComments(gameID: number): Promise<Comment[]> {
 
 export async function getUsers(): Promise<User[]> {
   const res = await fetch(
-    `http://localhost:5000/api/users`,
+    `${apiUrl}/api/users`,
     { 
       method: "GET",
       credentials: "include"
