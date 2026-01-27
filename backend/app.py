@@ -100,7 +100,7 @@ def game(id):
             WHERE ga.GameID = g.ID
             ORDER BY ga.ID
         ) AS GA
-        WHERE g.ID = ?;
+        WHERE g.ID = %s;
 
     """
     conn = db.create_connection()

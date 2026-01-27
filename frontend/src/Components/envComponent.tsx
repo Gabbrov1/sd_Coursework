@@ -1,4 +1,4 @@
 export default function getEnvironment(): string {
-  const apiUrl = import.meta.env.PUBLIC_API_ROOT;
+  const apiUrl = "https://sd-coursework-backend.onrender.com";
   return apiUrl;
 }
