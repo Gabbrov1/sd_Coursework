@@ -1,7 +1,7 @@
 export default function googleSignIn(){
     // Google Sign-In button component, Logo was taken from Google Brand Guidelines
     const handleLogin = () => {
-    window.location.href = "https://sd-coursework-backend.onrender.com/auth/google"; // Flask backend
+        window.location.href = "https://sd-coursework-backend.onrender.com/auth/google"; // Flask backend
     };
     return(
         <div className="google-btn">
