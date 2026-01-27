@@ -106,20 +106,29 @@ def googleLogin(googleId, email):
     with conn.cursor() as cursor:  
         try:
             # Try find user by Google ID
-            user = cursor.execute("SELECT * FROM Users WHERE GoogleId = %s", (googleId,))
+            cursor.execute("SELECT * FROM Users WHERE GoogleId = %s", (googleId,))
+            user = cursor.fetchone()
             if user:
                 return user
             
-            # No Google ID%s Try matching email
-            user = cursor.execute("SELECT * FROM Users WHERE Email = %s", (email,))
+            # No Google ID? Try matching email
+            cursor.execute("SELECT * FROM Users WHERE Email = %s", (email,))
+            user = cursor.fetchone()
             if user:
                 # Link account
                 cursor.execute("UPDATE Users SET GoogleId = %s WHERE Email = %s", (googleId, email))
-                return cursor.execute("SELECT * FROM Users WHERE GoogleId = %s", (googleId,))
+                conn.commit()
+                cursor.execute("SELECT * FROM Users WHERE GoogleId = %s", (googleId,))
+                return cursor.fetchone()
             
-            # No user%s create new
-            cursor.execute("INSERT INTO Users (Username,Email, PassHash,GoogleId) VALUES (%s, %s, %s, %s)", (email.split('@')[0], email, googleId, googleId))
-            return cursor.execute("SELECT * FROM Users WHERE GoogleId = %s", (googleId,))
+            # No user? create new
+            cursor.execute(
+                "INSERT INTO Users (Username, Email, PassHash, GoogleId) VALUES (%s, %s, %s, %s)", 
+                (email.split('@')[0], email, googleId, googleId)  # You may want PassHash=NULL or some default
+            )
+            conn.commit()
+            cursor.execute("SELECT * FROM Users WHERE GoogleId = %s", (googleId,))
+            return cursor.fetchone()
 
         except Exception as e:
             print("Google login failed:", e)
