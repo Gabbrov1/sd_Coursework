@@ -100,7 +100,10 @@ def deleteAccount(username):
         except Exception as e:
             print("Delete failed:", e)
             return False
-        
+    
+    
+    
+#TODO: Refactor to use DB helper functions and reduce code duplication.
 def googleLogin(googleId, email):
     conn = db.create_connection()
     with conn.cursor() as cursor:  
