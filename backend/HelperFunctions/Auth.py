@@ -37,8 +37,8 @@ def setPassword(username,oldPass,newPass):
     conn = db.create_connection()
     with conn.cursor() as cursor:  
          
-        oldHashed = bcrypt.hashpw(oldPass.encode(), bcrypt.gensalt())
-        newHashed = bcrypt.hashpw(newPass.encode(), bcrypt.gensalt())
+        oldHashed = bcrypt.hashpw(oldPass.encode("utf-8"), bcrypt.gensalt())
+        newHashed = bcrypt.hashpw(newPass.encode("utf-8"), bcrypt.gensalt())
         cursor.execute(sql,(newHashed,username,oldHashed))
         
     return ("Success",200)
@@ -46,7 +46,7 @@ def setPassword(username,oldPass,newPass):
 def createAccount(username,password):
     conn = db.create_connection()
     with conn.cursor() as cursor:  
-        hashed = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
+        hashed = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
         
         try:
             cursor.execute(

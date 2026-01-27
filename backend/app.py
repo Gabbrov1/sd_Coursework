@@ -22,9 +22,10 @@ CORS(
 app.secret_key = os.getenv("SECRET_KEY")
 
 app.config.update(
-    SESSION_COOKIE_SAMESITE="None",
     SESSION_COOKIE_SECURE=True,
+    SESSION_COOKIE_SAMESITE="None",
 )
+
 oauth = OAuth(app)
 
 google = oauth.register(
@@ -214,8 +215,8 @@ def google_login():
 @app.route("/auth/google/authorize")
 def google_authorize():
     token = google.authorize_access_token()
-    resp = google.get("userinfo")
-    user_info = resp.json()
+    user_info = token["userinfo"]
+
     
     googleLogin = auth.googleLogin(user_info["id"],user_info["email"])
     if googleLogin is None:
