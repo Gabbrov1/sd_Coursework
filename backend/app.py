@@ -218,7 +218,10 @@ def google_authorize():
     user_info = token["userinfo"]
 
     
-    googleLogin = auth.googleLogin(user_info["id"],user_info["email"])
+    googleLogin = auth.googleLogin(
+        user_info["sub"],
+        user_info["email"]
+    )
     if googleLogin is None:
         return jsonify({"error": "Google login failed"}), 401
     
