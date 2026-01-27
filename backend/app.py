@@ -235,7 +235,7 @@ def google_authorize():
         "username": googleLogin.get("Username")
     }
     
-    return jsonify({"message": "Login successful", "user": session["user"]}), 200
+    return redirect("https://sd-bu25.pages.dev/auth/Account")
 #===============================================
 #Comments
 @app.route("/api/games/<int:gameID>/comments", methods=['GET','POST'])
