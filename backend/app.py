@@ -151,8 +151,8 @@ def log_in():
         return jsonify({"error": "Invalid username or password"}), 401
     
     # Store in session
-    session['user_id'] = user["MongoId"]
-    session['username'] = user["Username"]
+    session['user_id'] = user.get("MongoId")
+    session['username'] = user.get("Username")
     session['is_admin'] = user.get("isAdmin", False)
 
     # Successful login

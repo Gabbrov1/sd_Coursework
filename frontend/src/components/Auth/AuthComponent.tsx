@@ -25,7 +25,6 @@ export default function AuthComponent() {
                 return;
             }
         }
-
         const formData = new FormData(form);
 
         const url = stateRegister
@@ -50,9 +49,8 @@ export default function AuthComponent() {
                 return;
             }
 
-            // Success handling
             if (stateRegister) {
-                window.location.href = "/auth/login";
+                window.location.href = "/auth/login"; // reloads the page
             } else {
                 window.location.href = "/";
             }
