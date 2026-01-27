@@ -234,6 +234,7 @@ def google_authorize():
         "picture": user_info.get("picture"),
         "username": googleLogin.get("Username")
     }
+    session["logged_in"]=True
     
     return redirect("https://sd-bu25.pages.dev/auth/Account")
 #===============================================
