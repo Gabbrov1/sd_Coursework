@@ -206,24 +206,8 @@ def auth_status():
     
 @app.route('/auth/google', methods=['GET'])
 def google_login():
-    redirect_uri = google.get('google_authorize', _external=True)
+    redirect_uri = url_for("google_authorize", _external=True)
     return google.authorize_redirect(redirect_uri)
-
-@app.route("/auth/google/callback")
-def google_callback():
-    token = google.authorize_access_token()  # fetch token from Google
-    response = google.get("userinfo")  # fetch user info
-    user_info = response.json()
-
-    # Store in session
-    session["user"] = {
-        "id": user_info["id"],
-        "email": user_info["email"],
-        "name": user_info["name"],
-        "picture": user_info["picture"]
-    }
-
-    return jsonify({"message": "Logged in with Google", "user": user_info})
 
 @app.route("/auth/google/authorize")
 def google_authorize():
