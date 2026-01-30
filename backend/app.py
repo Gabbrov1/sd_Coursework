@@ -7,9 +7,14 @@ from flask import Flask, request, jsonify, redirect, session,url_for
 from flask_cors import CORS
 from authlib.integrations.flask_client import OAuth
 from dotenv import load_dotenv
+from werkzeug.middleware.proxy_fix import ProxyFix
+
+
 load_dotenv()
 
 app = Flask(__name__)
+
+app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 
 # Enable Cross-Origin Resource Sharing (CORS) for the specified origin
 CORS(
@@ -18,7 +23,9 @@ CORS(
     supports_credentials=True
 )
 app.config['SESSION_COOKIE_SECURE'] = True  # only if using HTTPS
-app.config['SESSION_COOKIE_SAMESITE'] = "Lax"  # allows redirect from OAuth flow
+app.config['SESSION_COOKIE_SAMESITE'] = "None"  # allows redirect from OAuth flow
+app.config['SESSION_COOKIE_HTTPONLY'] = True
+
 
 # Set a secret key for session management
 app.secret_key = os.getenv("SECRET_KEY","dev-secret-key")
@@ -164,6 +171,8 @@ def log_in():
     session['is_admin'] = user.get("isAdmin", False)
 
     # Successful login
+    
+    print(f"{session.get('username')}({session.get('user_id')}) logged in.")
     return jsonify({"message": "Login successful", "user": user}), 200
 
 @app.route('/auth/register', methods=['POST'])

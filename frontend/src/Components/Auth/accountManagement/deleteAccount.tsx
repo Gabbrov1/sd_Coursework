@@ -26,6 +26,7 @@ const DeleteAccount: React.FC = () => {
                     'Content-Type': 'application/json',
 
                 },
+                credentials: "include"
             });
 
             if (!response.ok) {
