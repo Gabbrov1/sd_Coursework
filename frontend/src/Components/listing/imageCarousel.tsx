@@ -18,9 +18,9 @@ export default function GameImageList({ images=[] }: { images: string[] }) {
     return (        
         <div className="image-carousel">
             <div className="image-holder">
-                <button className="carousel-buttons" onClick={() => setCurrentImage(i => Math.max(0, i - 1))}>&lt;</button>
+                <button className="carousel-buttons prev" onClick={() => setCurrentImage(i => Math.max(0, i - 1))}>&lt;</button>
                     <img src={images[currentImage]} alt="Game Image" className="game-image"/>
-                <button className="carousel-buttons" onClick={() => setCurrentImage(i => Math.min(images.length - 1, i + 1))}>&gt;</button>
+                <button className="carousel-buttons next" onClick={() => setCurrentImage(i => Math.min(images.length - 1, i + 1))}>&gt;</button>
             </div>
             <div className="image-pagination">
                 {images.map((_, idx) => (

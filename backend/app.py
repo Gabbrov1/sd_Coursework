@@ -27,6 +27,7 @@ app.secret_key = os.getenv("SECRET_KEY","dev-secret-key")
 
 oauth = OAuth(app)
 
+# Designed altered from https://authlib.org/ by AI, due code not working as intended.
 google = oauth.register(
     name="google",
     client_id=os.getenv("Google_Client"),
@@ -39,6 +40,7 @@ google = oauth.register(
 
 #================= API Routes ============================
 
+#code added as recommended by AI for health check endpoint.
 @app.route('/health', methods=['GET'])
 def health_check():
     return jsonify({"status": "OK"}), 200
