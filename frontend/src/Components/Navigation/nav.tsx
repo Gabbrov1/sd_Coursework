@@ -20,6 +20,8 @@ export default function NavBar() {
     logged_in: false,
   });
 
+  const [navCollapsed, setNavCollapsed] = useState(true);
+
   useEffect(() => {
     fetch(`${apiUrl}/auth/status`, {
       method: "GET",
@@ -34,7 +36,7 @@ export default function NavBar() {
   }, []);
 
   return (
-    <nav className="navbar">
+    <nav className={`navbar ${navCollapsed ? "collapsed" : "expanded"}`}>
       <ul className="nav-logo">
         <li>
           <a href="/">Home</a>
@@ -67,6 +69,9 @@ export default function NavBar() {
           </li>
         )}
       </ul>
+      <p className="mobile-toggle" onClick={() => setNavCollapsed(!navCollapsed)}>
+        {navCollapsed ? "☰" : "✕"}
+      </p>
     </nav>
   );
 }

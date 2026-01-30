@@ -109,7 +109,8 @@ export default function AuthComponent() {
                             {stateRegister ? "Register" : "Sign In"}
                         </button>
                     </form>
-                    <GoogleSignIn/>
+                    {stateRegister ? <></> : <GoogleSignIn/>}
+                    
                 </div>
             </div>
         </div>

@@ -123,12 +123,11 @@
 
     }
     .game{
-        max-width: 99%;
+        width: 90%;
         margin: 1rem 1%;
     }
     .game-top{
         flex-direction: column;
-        align-items: center;
     }
     .game-categories-holder, .game-consoles-holder{
         
@@ -161,7 +160,7 @@
             top: -20px;
             background-color: rgba($color: #333, $alpha: 0.8);
             padding: 5px 10px;
-            border-radius: 0 0 10px 10px;
+            border-radius: 10px;
             color:#eee;
             
             font-size: 1.4em;
@@ -202,4 +201,6 @@
         }
 
     }
+
+
 }

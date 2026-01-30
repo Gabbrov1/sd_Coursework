@@ -127,7 +127,7 @@ export default function CommentsComponent(props: { gameID: number }) {
   );
 
   return (
-    <div>
+    <div className="comments-section">
       <h2>Comments Section</h2>
 
       {error && <p>{error}</p>}
