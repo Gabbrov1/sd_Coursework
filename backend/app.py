@@ -14,7 +14,12 @@ load_dotenv()
 
 app = Flask(__name__)
 
-app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
+app.wsgi_app = ProxyFix(
+    app.wsgi_app,
+    x_for=1,
+    x_proto=1,
+    x_host=1
+)
 
 # Enable Cross-Origin Resource Sharing (CORS) for the specified origin
 CORS(
@@ -22,8 +27,8 @@ CORS(
     resources={r"/*": {"origins": [r"https://.*\.pages\.dev", "http://localhost:4321"]}},
     supports_credentials=True
 )
-app.config['SESSION_COOKIE_SECURE'] = True  # only if using HTTPS
-app.config['SESSION_COOKIE_SAMESITE'] = "None"  # allows redirect from OAuth flow
+app.config['SESSION_COOKIE_SECURE'] = os.getenv("ENV") == "production"
+app.config['SESSION_COOKIE_SAMESITE'] = "None"  
 app.config['SESSION_COOKIE_HTTPONLY'] = True
 
 
