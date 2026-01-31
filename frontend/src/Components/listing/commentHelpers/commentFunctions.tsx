@@ -23,7 +23,7 @@ export default function CommentActions({ root,gameID }: { root: string | null ,g
     });
   }
   return (
-    <>
+    <div className="commentActionsContainer">
       <button className="commentInteractButton" onClick={() => setCommentToggle(true)}>Comment</button>
       <button className="commentInteractButton">Like</button>
       <button className="commentInteractButton">Share</button>
@@ -36,8 +36,7 @@ export default function CommentActions({ root,gameID }: { root: string | null ,g
             <button type="reset" className="cancelCommentButton" onClick={() => setCommentToggle(false)} >Cancel</button>
           </div>
         </form>
-        
       </div>
-    </>
+    </div>
   );
 }

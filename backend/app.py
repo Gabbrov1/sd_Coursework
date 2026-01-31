@@ -193,19 +193,20 @@ def delete_account():
         user_id = session['user_id']
         auth.deleteAccount(user_id)
         db.deleteUser(user_id)
-        session.clear()
+        session.pop("user_id", None)
         return jsonify({"message": "Account deleted successfully"}), 200
     else:
         return jsonify({"error": "Not authenticated"}), 401
 
 @app.route('/auth/logout', methods=['POST'])
 def log_out():
-    session.pop("user", None)
+    session.pop("user_id", None)
     return redirect('/')
 
 @app.route('/auth/status', methods=['GET'])
 def auth_status():
     if 'user_id' in session:
+        session["logged_in"]=True
         return jsonify({
             "logged_in": True,
             "user": {

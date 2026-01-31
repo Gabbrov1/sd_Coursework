@@ -9,7 +9,7 @@ export interface Comment {
   children?: Comment[];
 }
 export interface User {
-  userID: string;
+  _id: string;
   userName: string;
   avatarImage: string;
   quote: string;

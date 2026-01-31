@@ -120,7 +120,7 @@ export default function CommentsComponent(props: { gameID: number }) {
   }, [props.gameID]);
   
   // Memoized user lookup map
-  //Changed from find to useMemo for performance(AI suggestion)
+  // Changed from find to useMemo for performance(AI suggestion)
   const userMap: Record<string, User> = useMemo(
   () => Object.fromEntries(users.map(u => [u._id, u])),
   [users]

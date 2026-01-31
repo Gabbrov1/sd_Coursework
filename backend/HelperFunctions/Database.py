@@ -91,7 +91,6 @@ def getGames(gameID):
     
 def getComments(gameID: int):
     cursor = commentsCol.find({"gameID": gameID})
-    print(cursor)
     comments = list(cursor)
 
     structured = buildCommentTree(comments)
