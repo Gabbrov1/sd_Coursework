@@ -1,4 +1,5 @@
-# sd_Coursework
+# Systen Development Coursework
+---
 This project has been the assignment completed for Bournemouth university, under the system development Assignment.
 
 For this project, we were assigned the task of designing and developing a full website from end to end, with custom REST API and implementation of at least 1 Google services API integration.
