@@ -74,9 +74,9 @@ This project was submitted as part of the **System Development** module at **Bou
 
 ## 📸 Screenshots 
 
-![App screenshot](./docs/sysDev.JPG)
+![App screenshot](https://raw.githubusercontent.com/Gabbrov1/sd_Coursework/main/docs/sysDev.JPG)
 
-![App screenshot](./docs/img1.jpeg)
-![App screenshot](./docs/img2.jpeg)
-![App screenshot](./docs/img3.jpeg)
-![App screenshot](./docs/img4.jpeg)
+![App screenshot](https://raw.githubusercontent.com/Gabbrov1/sd_Coursework/main/docs/img1.jpeg)
+![App screenshot](https://raw.githubusercontent.com/Gabbrov1/sd_Coursework/main/docs/img2.jpeg)
+![App screenshot](https://raw.githubusercontent.com/Gabbrov1/sd_Coursework/main/docs/img3.jpeg)
+![App screenshot](https://raw.githubusercontent.com/Gabbrov1/sd_Coursework/main/docs/img4.jpeg)
