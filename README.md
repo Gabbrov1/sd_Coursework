@@ -1,22 +1,73 @@
-# Systen Development Coursework
+# University Full-Stack Web Project
+
+![Bournemouth University](https://img.shields.io/badge/Bournemouth_University-System_Development-gray?style=flat-square)
+![Astro](https://img.shields.io/badge/Astro-React-8a2be2?style=flat-square&logo=astro)
+![TypeScript](https://img.shields.io/badge/TypeScript-blue?style=flat-square&logo=typescript&logoColor=white)
+![Flask](https://img.shields.io/badge/Flask-REST_API-green?style=flat-square&logo=flask)
+![MongoDB](https://img.shields.io/badge/MongoDB-NoSQL-4DB33D?style=flat-square&logo=mongodb&logoColor=white)
+![MSSQL](https://img.shields.io/badge/MSSQL-SQL-CC2927?style=flat-square&logo=microsoftsqlserver&logoColor=white)
+![Cloudflare Pages](https://img.shields.io/badge/Cloudflare_Pages-Deployed-F38020?style=flat-square&logo=cloudflare&logoColor=white)
+
+A full-stack web application built for the **System Development Assignment** at Bournemouth University. The project covers end-to-end design and development of a website with a custom REST API and Google OAuth integration.
+
 ---
-This project has been the assignment completed for Bournemouth university, under the system development Assignment.
 
-For this project, we were assigned the task of designing and developing a full website from end to end, with custom REST API and implementation of at least 1 Google services API integration.
+## Overview
 
-This website was done using:
- - Astro and React frameworks, in order to provide a finished project that would be static yet still interactive. Typescript has been used mostly due to my more extensive experience in strongly typed languages.
- - The backend of the application has been made using Flask in combination with MongoDB and MSSQL. Another requirement for the successfull completion of this project has been the use of 2 differing database types, namely SQL and NoSQL database types. in my project, the SQL Databse is used to store user details as well as general project information and the MongoDB database is used in order to store customisable aspects of the website.
- - In terms of API usage, this Project uses a standard Flask, REST API, to communicate with the databses and website.
+This project fulfils the following assignment requirements:
 
+- Full website designed and developed from scratch
+- Custom REST API built with Flask
+- At least one Google Services API integrated (Google OAuth)
+- Two distinct database types used (SQL and NoSQL)
+- Public release of the final project
 
-Release:
-One of the optional requirements for our assignment was the public release of the final projects.
+---
 
- - This was accomplished by using NGrok to expose the local databases by port, which was done in order to allow for cheap/ free hosting of the databses, since MSSQL databses tend to be quite expensive to host.
- - The frontend website was released using CloudFlare pages, which allowed for free hosting.
- - The backend of the website was hosted using Render free hosting.
+## Tech Stack
 
-The API used for this implementation was the Google OAuth method, which allowed for users to sign up/ sign in using their Google accounts. This was chosen due to its compatibility with the website and since it would allow for easy access to their accounts, as it has become the default practice to allow users to sign in with their google/Apple accounts.
+### Frontend
 
-The biggest issue I have encountered during the development of this project has been the Login system and allowing it to work correctly with the CORS system. Due to the time limitations on the project, I wasn't able to solve this issue. The current issue makes the webpage reset itself immediately after login, esesntially reseting logins.
+| Technology | Purpose |
+|---|---|
+| Astro + React | Static-first framework with interactive islands |
+| TypeScript | Strongly typed development |
+| Cloudflare Pages | Free frontend hosting |
+
+### Backend
+
+| Technology | Purpose |
+|---|---|
+| Flask | REST API server |
+| MSSQL | User details and general project data |
+| MongoDB | Customisable and dynamic website content |
+| Render | Free backend hosting |
+| NGrok | Port-forwarding for local database access |
+
+### API Integration
+
+| Integration | Purpose |
+|---|---|
+| Google OAuth 2.0 | Sign in / sign up with Google account |
+
+---
+
+## Deployment
+
+- **Frontend:** Cloudflare Pages (free static hosting)
+- **Backend:** Render (free tier)
+- **Databases:** Run locally and exposed via NGrok. This was chosen to avoid the cost of managed MSSQL hosting.
+
+---
+
+## Known Issues
+
+> **Login / CORS bug**
+>
+> After a successful Google OAuth login, the page resets immediately and logs the user out. The issue is a conflict between the OAuth redirect flow and the CORS configuration. A fix was not implemented within the project timeline.
+
+---
+
+## Assignment Context
+
+This project was submitted as part of the **System Development** module at **Bournemouth University**. Public release was an optional assignment requirement, fulfilled by deploying the frontend and backend to free hosting platforms.
