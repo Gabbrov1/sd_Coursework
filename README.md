@@ -71,3 +71,12 @@ This project fulfils the following assignment requirements:
 ## Assignment Context
 
 This project was submitted as part of the **System Development** module at **Bournemouth University**. Public release was an optional assignment requirement, fulfilled by deploying the frontend and backend to free hosting platforms.
+
+## 📸 Screenshots 
+
+![App screenshot](./docs/sysDev.JPG)
+
+![App screenshot](./docs/img1.jpeg)
+![App screenshot](./docs/img2.jpeg)
+![App screenshot](./docs/img3.jpeg)
+![App screenshot](./docs/img4.jpeg)

@@ -28,9 +28,11 @@ def checkDetails(username, password):
         return False
 
 def setPassword(username,oldPass,newPass):
+    
+    
     sql = """
             UPDATE Users
-            SET PasswordHash = %s 
+            SET PassHash = %s 
             WHERE Username = %s
             AND PassHash = %s;
         """
@@ -50,7 +52,7 @@ def createAccount(username,password):
         
         try:
             cursor.execute(
-                "INSERT INTO Users (Username, PassHash, MongoId) OUTPUT INSERTED.ID VALUES (%s, %s, %s)",
+                "INSERT INTO Users (Username, PassHash) OUTPUT INSERTED.ID VALUES (%s, %s)",
                 (username, hashed.decode())
             )
             conn.commit()

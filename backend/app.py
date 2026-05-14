@@ -2,24 +2,16 @@ import math, os, bson
 import HelperFunctions.Database as db
 import HelperFunctions.Auth  as auth
 
-
+from datetime import timedelta
 from flask import Flask, request, jsonify, redirect, session,url_for
 from flask_cors import CORS
 from authlib.integrations.flask_client import OAuth
 from dotenv import load_dotenv
-from werkzeug.middleware.proxy_fix import ProxyFix
 
 
 load_dotenv()
 
 app = Flask(__name__)
-
-app.wsgi_app = ProxyFix(
-    app.wsgi_app,
-    x_for=1,
-    x_proto=1,
-    x_host=1
-)
 
 # Enable Cross-Origin Resource Sharing (CORS) for the specified origin
 CORS(
@@ -27,13 +19,24 @@ CORS(
     resources={r"/*": {"origins": [r"https://.*\.pages\.dev", "http://localhost:4321"]}},
     supports_credentials=True
 )
-app.config['SESSION_COOKIE_SECURE'] = os.getenv("ENV") == "production"
-app.config['SESSION_COOKIE_SAMESITE'] = "None"  
-app.config['SESSION_COOKIE_HTTPONLY'] = True
 
+# Old Code, changed to try fix user state storage
+#app.config['SESSION_COOKIE_SECURE'] = True
+#app.config['SESSION_COOKIE_SAMESITE'] = "None"  
+#app.config['SESSION_COOKIE_HTTPONLY'] = True
+
+app.config.update(
+    SESSION_TYPE='redis',                   # Store sessions in Redis instead of cookies
+    SESSION_REDIS=os.environ['PUBLIC_API_ROOT'],  # Connect to Redis at the URL provided in environment variables
+    SESSION_COOKIE_SAMESITE='None',         # Allow the session cookie to be sent in cross-site requests (needed for Pages.dev → Render)
+    SESSION_COOKIE_SECURE=True              # Only send the session cookie over HTTPS
+)
+
+app.permanent_session_lifetime = timedelta(days=5)
+session(app)
 
 # Set a secret key for session management
-app.secret_key = os.getenv("SECRET_KEY","dev-secret-key")
+app.secret_key = os.getenv("SECRET_KEY")
 
 
 
